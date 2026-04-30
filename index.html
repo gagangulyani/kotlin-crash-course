@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kotlin Mastery — Dark Mode Edition</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #16213e;
+            --bg-code: #0d1117;
+            --text-primary: #eaeaea;
+            --text-secondary: #a0a0b0;
+            --accent: #7f52ff;
+            --accent-glow: rgba(127, 82, 255, 0.3);
+            --accent-secondary: #00d4aa;
+            --border: #2a2a40;
+            --error: #ff6b6b;
+            --success: #51cf66;
+            --warning: #ffd93d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .nav button {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .nav button:hover, .nav button.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* Search */
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .search-box {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .search-box::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Cards */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card h3 {
+            color: var(--accent-secondary);
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.8rem;
+        }
+        .card p, .card li {
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+        .card ul {
+            margin-left: 1.5rem;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        .code-block pre {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .copy-btn.copied {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Syntax Highlighting */
+        .keyword { color: #ff7b72; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .function { color: #d2a8ff; }
+        .type { color: #ffa657; }
+        .number { color: #79c0ff; }
+        .operator { color: #ff7b72; }
+        .property { color: #7ee787; }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.3rem;
+        }
+        .tag-theory { background: rgba(127, 82, 255, 0.2); color: var(--accent); }
+        .tag-cheat { background: rgba(0, 212, 170, 0.2); color: var(--accent-secondary); }
+        .tag-android { background: rgba(255, 107, 107, 0.2); color: var(--error); }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--bg-tertiary);
+            z-index: 200;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Quiz */
+        .quiz-option {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: rgba(127, 82, 255, 0.1);
+        }
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(81, 207, 102, 0.1);
+        }
+        .quiz-option.wrong {
+            border-color: var(--error);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        /* Roadmap Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        tr:hover {
+            background: rgba(127, 82, 255, 0.05);
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .back-to-top:hover {
+            transform: translateY(-5px);
+        }
+        .back-to-top.visible {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .nav { padding: 0.5rem; }
+            .nav button { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <header class="header">
+        <h1>Kotlin Mastery</h1>
+        <p>From JS/Python to Kotlin & Android — Dark Mode Edition</p>
+    </header>
+
+    <nav class="nav">
+        <button class="active" onclick="showSection('syntax')">Syntax Cheat Sheet</button>
+        <button onclick="showSection('concepts')">Core Concepts</button>
+        <button onclick="showSection('android')">Android</button>
+        <button onclick="showSection('roadmap')">Roadmap</button>
+        <button onclick="showSection('quiz')">Quiz</button>
+    </nav>
+
+    <div class="search-container">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search topics... (e.g., 'null safety', 'coroutines', 'compose')" onkeyup="searchContent()">
+    </div>
+
+    <div class="container">
+        <!-- SYNTAX CHEAT SHEET -->
+        <div id="syntax" class="section active">
+            <div class="card">
+                <h2>Variables & Types</h2>
+                <span class="tag tag-cheat">Cheat Sheet</span>
+                <p>JS-like type inference with explicit immutability:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">val</span> name = <span class="string">"Alex"</span>        <span class="comment">// const (immutable)</span>
+<span class="keyword">var</span> age = <span class="number">25</span>             <span class="comment">// let (mutable)</span>
+<span class="keyword">val</span> explicit: <span class="type">String</span> = <span class="string">"hi"</span>
+
+<span class="comment">// String templates</span>
+<span class="keyword">val</span> greeting = <span class="string">"Hello, </span><span class="property">$name</span><span class="string">! You are </span><span class="property">${age + 1}</span><span class="string"> next year."</span></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Functions</h2>
+                <span class="tag tag-cheat">Cheat Sheet</span>
+                <p>Arrow function vibes with Python-like named params:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="comment">// Single expression</span>
+<span class="keyword">fun</span> <span class="function">add</span>(a: <span class="type">Int</span>, b: <span class="type">Int</span>): <span class="type">Int</span> = a + b
+
+<span class="comment">// Default args + named params</span>
+<span class="keyword">fun</span> <span class="function">greet</span>(name: <span class="type">String</span>, greeting: <span class="type">String</span> = <span class="string">"Hi"</span>) = <span class="string">"</span><span class="property">$greeting</span><span class="string">, </span><span class="property">$name</span><span class="string">"</span>
+
+<span class="function">greet</span>(<span class="string">"Alex"</span>)                    <span class="comment">// "Hi, Alex"</span>
+<span class="function">greet</span>(name = <span class="string">"Alex"</span>, greeting = <span class="string">"Hey"</span>)  <span class="comment">// named arguments</span></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Collections</h2>
+                <span class="tag tag-cheat">Cheat Sheet</span>
+                <p>Functional chaining like JS array methods:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">val</span> list = <span class="function">listOf</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)      <span class="comment">// immutable</span>
+<span class="keyword">val</span> mutable = <span class="function">mutableListOf</span>(<span class="number">1</span>)   <span class="comment">// ArrayList equivalent</span>
+<span class="keyword">val</span> map = <span class="function">mapOf</span>(<span class="string">"a"</span> to <span class="number">1</span>)        <span class="comment">// Python dict / JS object</span>
+
+<span class="comment">// Functional chaining</span>
+list.<span class="function">filter</span> { it > <span class="number">1</span> }
+    .<span class="function">map</span> { it * <span class="number">2</span> }
+    .<span class="function">forEach</span> { <span class="function">println</span>(it) }</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Classes</h2>
+                <span class="tag tag-cheat">Cheat Sheet</span>
+                <p>Data classes = Python dataclass on steroids:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">data class</span> <span class="type">User</span>(<span class="keyword">val</span> name: <span class="type">String</span>, <span class="keyword">val</span> email: <span class="type">String</span>)
+
+<span class="keyword">val</span> user = <span class="type">User</span>(<span class="string">"Alex"</span>, <span class="string">"alex@example.com"</span>)
+<span class="function">println</span>(user.name)           <span class="comment">// property access</span>
+<span class="keyword">val</span> copy = user.<span class="function">copy</span>(name = <span class="string">"New"</span>)  <span class="comment">// built-in copy</span></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Extension Functions</h2>
+                <span class="tag tag-cheat">Cheat Sheet</span>
+                <p>Add methods to existing classes:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">fun</span> <span class="type">String</span>.<span class="function">addExclamation</span>(): <span class="type">String</span> = <span class="keyword">this</span> + <span class="string">"!!!"</span>
+
+<span class="string">"hello"</span>.<span class="function">addExclamation</span>()  <span class="comment">// "hello!!!"</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- CORE CONCEPTS -->
+        <div id="concepts" class="section">
+            <div class="card">
+                <h2>Null Safety</h2>
+                <span class="tag tag-theory">Theory Essential</span>
+                <p>Kotlin's type system distinguishes nullable and non-nullable types at compile time. This eliminates NullPointerExceptions.</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">var</span> name: <span class="type">String</span> = <span class="string">"Alex"</span>
+name = <span class="keyword">null</span>   <span class="comment">// ❌ COMPILE ERROR</span>
+
+<span class="keyword">var</span> nullable: <span class="type">String?</span> = <span class="string">"Alex"</span>
+nullable = <span class="keyword">null</span>  <span class="comment">// ✅ OK, the `?` makes it nullable</span>
+
+<span class="comment">// Safe call operator</span>
+<span class="keyword">val</span> length = nullable?.length   <span class="comment">// Int? (null if nullable was null)</span>
+
+<span class="comment">// Elvis operator</span>
+<span class="keyword">val</span> len = nullable?.length ?: <span class="number">0</span>  <span class="comment">// default to 0 if null</span>
+
+<span class="comment">// !! operator (avoid when possible)</span>
+<span class="keyword">val</span> forced = nullable!!.length   <span class="comment">// crashes if null</span></pre>
+                </div>
+                <p><strong>Key Insight:</strong> The <code>?</code> in <code>String?</code> is not just syntax sugar—it's a fundamentally different type. The compiler enforces null checks, making impossible states unrepresentable.</p>
+            </div>
+
+            <div class="card">
+                <h2>Smart Casting</h2>
+                <span class="tag tag-theory">Theory Essential</span>
+                <p>After a type check, Kotlin automatically casts the variable:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">fun</span> <span class="function">describe</span>(obj: <span class="type">Any</span>) {
+    <span class="keyword">if</span> (obj <span class="keyword">is</span> <span class="type">String</span>) {
+        <span class="function">println</span>(obj.length)  <span class="comment">// auto-cast to String!</span>
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Coroutines</h2>
+                <span class="tag tag-theory">Theory Essential</span>
+                <p>Lightweight threads managed by Kotlin (not OS). Code <em>looks</em> synchronous but executes asynchronously.</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">import</span> kotlinx.coroutines.*
+
+<span class="comment">// Like async/await but structured</span>
+<span class="keyword">suspend fun</span> <span class="function">fetchData</span>(): <span class="type">String</span> {
+    <span class="function">delay</span>(<span class="number">1000</span>)  <span class="comment">// non-blocking sleep</span>
+    <span class="keyword">return</span> <span class="string">"Data"</span>
+}
+
+<span class="keyword">fun</span> <span class="function">main</span>() = <span class="function">runBlocking</span> {
+    <span class="keyword">val</span> job = <span class="function">launch</span> {
+        <span class="keyword">val</span> data = <span class="function">fetchData</span>()
+        <span class="function">println</span>(data)
+    }
+    job.<span class="function">join</span>()
+}</pre>
+                </div>
+                <p><strong>Key Insight:</strong> Think of <code>suspend</code> as <code>async</code> in Python/JS, but you call it directly without <code>await</code> inside other suspend functions. You can launch millions of coroutines—try that with threads!</p>
+            </div>
+
+            <div class="card">
+                <h2>Sealed Classes & When</h2>
+                <span class="tag tag-theory">Theory Essential</span>
+                <p>Restricted class hierarchies with exhaustive checking:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">sealed class</span> <span class="type">Result</span>
+<span class="keyword">data class</span> <span class="type">Success</span>(<span class="keyword">val</span> data: <span class="type">String</span>) : <span class="type">Result</span>()
+<span class="keyword">data class</span> <span class="type">Error</span>(<span class="keyword">val</span> msg: <span class="type">String</span>) : <span class="type">Result</span>()
+
+<span class="comment">// Exhaustive when (like switch but smarter)</span>
+<span class="keyword">fun</span> <span class="function">handle</span>(result: <span class="type">Result</span>) = <span class="keyword">when</span> (result) {
+    <span class="keyword">is</span> <span class="type">Success</span> -> <span class="function">println</span>(result.data)
+    <span class="keyword">is</span> <span class="type">Error</span> -> <span class="function">println</span>(result.msg)
+    <span class="comment">// no else needed! Compiler knows all cases.</span>
+}</pre>
+                </div>
+                <p><strong>Key Insight:</strong> Perfect for state machines, API responses, and anywhere you need compile-time guarantees that you've handled all cases.</p>
+            </div>
+        </div>
+
+        <!-- ANDROID -->
+        <div id="android" class="section">
+            <div class="card">
+                <h2>Jetpack Compose</h2>
+                <span class="tag tag-android">Android</span>
+                <p>Declarative UI framework—like React but for native Android:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="property">@Composable</span>
+<span class="keyword">fun</span> <span class="function">Greeting</span>(name: <span class="type">String</span>) {
+    <span class="type">Column</span>(
+        modifier = <span class="type">Modifier</span>
+            .<span class="function">fillMaxSize</span>()
+            .<span class="function">padding</span>(<span class="number">16</span>.dp),
+        horizontalAlignment = <span class="type">Alignment</span>.CenterHorizontally
+    ) {
+        <span class="type">Text</span>(text = <span class="string">"Hello, </span><span class="property">$name</span><span class="string">!"</span>, fontSize = <span class="number">24</span>.sp)
+        <span class="type">Button</span>(onClick = { <span class="comment">/* handle click */</span> }) {
+            <span class="type">Text</span>(<span class="string">"Click me"</span>)
+        }
+    }
+}</pre>
+                </div>
+                <p><strong>Concept:</strong> UI is a function of state. When state changes, the UI automatically recomposes.</p>
+            </div>
+
+            <div class="card">
+                <h2>ViewModel + StateFlow</h2>
+                <span class="tag tag-android">Android</span>
+                <p>Architecture Components for reactive state management:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">class</span> <span class="type">MainViewModel</span> : <span class="type">ViewModel</span>() {
+    <span class="comment">// MutableStateFlow = mutable observable</span>
+    <span class="keyword">private val</span> _count = <span class="type">MutableStateFlow</span>(<span class="number">0</span>)
+    <span class="keyword">val</span> count: <span class="type">StateFlow</span>&lt;<span class="type">Int</span>&gt; = _count.<span class="function">asStateFlow</span>()
+
+    <span class="keyword">fun</span> <span class="function">increment</span>() {
+        _count.value++
+    }
+}</pre>
+                </div>
+                <p>In Compose, collect as state:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="keyword">val</span> count <span class="keyword">by</span> viewModel.count.<span class="function">collectAsState</span>()
+<span class="type">Text</span>(<span class="string">"Count: </span><span class="property">$count</span><span class="string">"</span>)</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Side Effects in Compose</h2>
+                <span class="tag tag-android">Android</span>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><span class="comment">// Run once when Composable enters composition</span>
+<span class="type">LaunchedEffect</span>(key1) {
+    <span class="comment">// suspend functions here</span>
+}
+
+<span class="comment">// Run cleanup when leaving composition</span>
+<span class="type">DisposableEffect</span>(key1) {
+    <span class="comment">// setup</span>
+    <span class="keyword">onDispose</span> {
+        <span class="comment">// cleanup</span>
+    }
+}
+
+<span class="comment">// Skip if value hasn't changed</span>
+<span class="type">SideEffect</span> {
+    <span class="comment">// runs after every successful recomposition</span>
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROADMAP -->
+        <div id="roadmap" class="section">
+            <div class="card">
+                <h2>Learning Roadmap</h2>
+                <table>
+                    <tr>
+                        <th>Week</th>
+                        <th>Focus</th>
+                        <th>Type</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Syntax basics, collections, functions</td>
+                        <td><span class="tag tag-cheat">Cheat Sheet</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Null safety, classes, data classes</td>
+                        <td><span class="tag tag-theory">Theory</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Coroutines basics</td>
+                        <td><span class="tag tag-theory">Theory</span></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Jetpack Compose basics</td>
+                        <td><span class="tag tag-cheat">Cheat Sheet</span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>ViewModel + StateFlow</td>
+                        <td><span class="tag tag-theory">Theory</span></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Navigation + simple app</td>
+                        <td><span class="tag tag-android">Project</span></td>
+                    </tr>
+                    <tr>
+                        <td>7+</td>
+                        <td>Kotlin Multiplatform</td>
+                        <td><span class="tag tag-theory">Theory</span></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>Resources</h2>
+                <ul>
+                    <li><strong>Official Docs:</strong> <a href="https://kotlinlang.org/docs/home.html" target="_blank">kotlinlang.org/docs</a></li>
+                    <li><strong>Playground:</strong> <a href="https://play.kotlinlang.org" target="_blank">play.kotlinlang.org</a></li>
+                    <li><strong>Android Codelabs:</strong> <a href="https://developer.android.com/courses/android-basics-compose/course" target="_blank">Android Basics with Compose</a></li>
+                    <li><strong>Coroutines Guide:</strong> <a href="https://kotlinlang.org/docs/coroutines-guide.html" target="_blank">Coroutines Guide</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- QUIZ -->
+        <div id="quiz" class="section">
+            <div class="card">
+                <h2>Kotlin Knowledge Check</h2>
+                <p>Test your understanding before moving to Android!</p>
+
+                <h3>Q1: What's the difference between <code>val</code> and <code>var</code>?</h3>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    <code>val</code> is for numbers, <code>var</code> is for strings
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">
+                    <code>val</code> is immutable (like JS <code>const</code>), <code>var</code> is mutable (like JS <code>let</code>)
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    There is no difference; they're interchangeable
+                </div>
+
+                <h3>Q2: What does <code>String?</code> mean?</h3>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    It's a String that must not be null
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">
+                    It's a nullable String that can hold null
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    It's an optional parameter type
+                </div>
+
+                <h3>Q3: What is the Elvis operator?</h3>
+                <div class="code-block">
+                    <pre>val len = name?.length ?: 0</pre>
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">
+                    Returns the left side if not null, otherwise the right side (default value)
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    Checks if both sides are equal
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    Throws an exception if the left side is null
+                </div>
+
+                <h3>Q4: What does <code>suspend</code> mean?</h3>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    It pauses the entire app until the function completes
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">
+                    It can pause execution without blocking the thread, resuming later
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    It makes the function private
+                </div>
+
+                <h3>Q5: Why use <code>data class</code>?</h3>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    It stores data in a local database automatically
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">
+                    Auto-generates equals(), hashCode(), toString(), copy(), and componentN()
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    It makes the class abstract
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+    <footer class="footer">
+        <p>Built with 💜 for Kotlin learners | Open this file in any browser to start learning</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Syntax highlighted • Searchable • Interactive quiz • Copy code with one click</p>
+    </footer>
+
+    <script>
+        // Section Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Copy Code
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Quiz
+        function checkAnswer(element, isCorrect) {
+            if (element.classList.contains('correct') || element.classList.contains('wrong')) return;
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.innerHTML += ' ✅';
+            } else {
+                element.classList.add('wrong');
+                element.innerHTML += ' ❌';
+            }
+        }
+
+        // Search
+        function searchContent() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
+            // Show all sections when searching
+            if (query) {
+                document.querySelectorAll('.section').forEach(s => s.classList.add('active'));
+            } else {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelector('.nav button.active').click();
+            }
+        }
+
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+
+            // Back to top button
+            const btn = document.getElementById('backToTop');
+            if (winScroll > 500) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
