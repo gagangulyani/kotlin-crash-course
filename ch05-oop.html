@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 5. Classes & OOP — Kotlin Crash Course</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-chapter="ch05">
+    <div class="mobile-nav">
+        <div class="mobile-nav-brand">Kotlin Crash Course</div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">Menu</button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">Kotlin Crash Course</div>
+            <div class="sidebar-tagline">From JS/Python to Android</div>
+            <div class="sidebar-progress">
+                <div class="sidebar-progress-label"><span>Progress</span><span>0%</span></div>
+                <div class="sidebar-progress-bar"><div class="sidebar-progress-fill"></div></div>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Chapters</h3>
+                <a href="index.html">Start Here</a>
+                <a href="ch01-basics.html" data-chapter="ch01">1. Basics & Types</a>
+                <a href="ch02-functions.html" data-chapter="ch02">2. Functions</a>
+                <a href="ch03-nullsafety.html" data-chapter="ch03">3. Null Safety</a>
+                <a href="ch04-collections.html" data-chapter="ch04">4. Collections</a>
+                <a href="ch05-oop.html" class="active" data-chapter="ch05">5. Classes & OOP</a>
+                <a href="ch06-coroutines.html" data-chapter="ch06">6. Coroutines</a>
+                <a href="ch07-android.html" data-chapter="ch07">7. Android & Compose</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 5</div>
+                    <h1 class="chapter-title">Classes & OOP</h1>
+                    <p class="chapter-description">Data classes, sealed classes, inheritance, interfaces, and extension functions. Object-oriented Kotlin without the boilerplate.</p>
+                </div>
+
+                <div class="learning-objectives">
+                    <h3>By the end of this chapter, you will:</h3>
+                    <ul>
+                        <li>Declare classes with primary and secondary constructors</li>
+                        <li>Use data classes to eliminate boilerplate</li>
+                        <li>Understand sealed classes for restricted hierarchies</li>
+                        <li>Implement interfaces and use delegation</li>
+                        <li>Add functionality to existing classes with extensions</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>Declaring Classes</h2>
+                    <p>Kotlin classes are concise. The primary constructor is part of the class header.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Primary constructor with properties
+class User(val name: String, var age: Int)
+
+// Properties are automatically created from constructor params
+val user = User("Alex", 25)
+println(user.name)   // "Alex"
+user.age = 26        // ✅ OK — var
+// user.name = "Sam" // ❌ ERROR — val
+
+// With default values
+class User(val name: String, var age: Int = 0)
+val defaultUser = User("Alex")   // age defaults to 0</code></pre>
+                    </div>
+
+                    <h3>Init Block</h3>
+                    <p>For validation or setup logic, use an <code>init</code> block.</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class User(val name: String, var age: Int) {
+    init {
+        require(age >= 0) { "Age must be non-negative" }
+        println("User $name created")
+    }
+}</code></pre>
+                    </div>
+
+                    <h3>Secondary Constructors</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class Person(val name: String) {
+    var age: Int = 0
+
+    // Secondary constructor must delegate to primary
+    constructor(name: String, age: Int) : this(name) {
+        this.age = age
+    }
+}
+
+val p1 = Person("Alex")
+val p2 = Person("Alex", 25)</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">class User {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+const user = new User("Alex", 25);</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">class User:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+user = User("Alex", 25)</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Constructor params prefixed with <code>val</code>/<code>var</code> automatically become properties. No <code>this.name = name</code> boilerplate.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Data Classes</h2>
+                    <p>For classes whose main purpose is to hold data, use <code>data class</code>. The compiler generates <code>equals()</code>, <code>hashCode()</code>, <code>toString()</code>, <code>copy()</code>, and destructuring functions automatically.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">data class User(val name: String, val email: String, val age: Int = 0)
+
+val user1 = User("Alex", "alex@example.com", 25)
+val user2 = User("Alex", "alex@example.com", 25)
+
+// Auto-generated equals
+println(user1 == user2)   // true — compares content, not reference
+
+// Auto-generated toString
+println(user1)            // User(name=Alex, email=alex@example.com, age=25)
+
+// Copy with changes (immutable update pattern)
+val older = user1.copy(age = 26)
+println(older)            // User(name=Alex, email=alex@example.com, age=26)
+
+// Destructuring
+val (name, email, age) = user1
+println("$name, $email, $age")</code></pre>
+                    </div>
+
+                    <div class="info-box success-box">
+                        <strong>Immutable data pattern:</strong> Always use <code>val</code> in data classes. When you need to "change" something, use <code>.copy()</code>. This makes your code predictable and thread-safe.
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">// No built-in data class. You'd use:
+class User {
+    constructor(name, email) {
+        this.name = name;
+        this.email = email;
+    }
+    // Must implement equals, toString manually
+}
+
+// Or just objects:
+const user = { name: "Alex", email: "alex@example.com" };</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class User:
+    name: str
+    email: str
+    age: int = 0
+
+user = User("Alex", "alex@example.com")</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Data classes are built-in and more powerful than Python's <code>@dataclass</code>. The <code>copy()</code> function and destructuring are especially useful.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Sealed Classes</h2>
+                    <p>A sealed class is a class with a restricted hierarchy. All subclasses must be defined in the same file. This is perfect for representing restricted states, like API results or UI states.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">sealed class Result&lt;out T&gt;
+data class Success&lt;T&gt;(val data: T) : Result&lt;T&gt;()
+data class Error(val message: String) : Result&lt;Nothing&gt;()
+object Loading : Result&lt;Nothing&gt;()   // singleton for stateless case
+
+// The compiler knows all possible subtypes
+fun handle(result: Result&lt;String&gt;) = when (result) {
+    is Success -> println("Got: ${result.data}")
+    is Error -> println("Error: ${result.message}")
+    Loading -> println("Loading...")
+    // No else needed! Compiler guarantees exhaustiveness.
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>When to use sealed classes:</strong> API response states (Success/Error/Loading), UI states, navigation events, permission results — anywhere you have a fixed set of possibilities and want the compiler to ensure you handle every case.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Inheritance & Interfaces</h2>
+                    <p>Classes are <code>final</code> by default in Kotlin. To allow inheritance, mark them <code>open</code>.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Interface
+interface Drawable {
+    fun draw()   // abstract by default
+    fun describe() = "I can be drawn"   // default implementation
+}
+
+// Abstract class
+abstract class Shape(val color: String) {
+    abstract fun area(): Double
+    fun describe() = "A $color shape"
+}
+
+// Open class (can be inherited)
+open class Rectangle(val width: Double, val height: Double) : Shape("red") {
+    override fun area() = width * height
+    open fun resize(factor: Double) = Rectangle(width * factor, height * factor)
+}
+
+// Final class (cannot be inherited further)
+class Square(side: Double) : Rectangle(side, side) {
+    // override fun resize(...) // ❌ Can't override — parent wasn't open
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Design philosophy:</strong> Kotlin defaults to <code>final</code> because inheritance is powerful but dangerous. Only open classes/methods when you explicitly design for extension. Prefer composition over inheritance.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Extension Functions</h2>
+                    <p>Add new functions to existing classes without inheritance. This is how Kotlin enhances Java/Android APIs.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Add a function to String
+fun String.addExclamation(): String = this + "!!!"
+
+// Add a function to Int
+fun Int.isEven(): Boolean = this % 2 == 0
+
+// Usage
+println("hello".addExclamation())   // "hello!!!"
+println(4.isEven())                 // true
+
+// Nullable extensions
+fun String?.orDefault(default: String = "N/A") = this ?: default
+
+val nullString: String? = null
+println(nullString.orDefault())      // "N/A"</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">// Monkey-patching (generally discouraged)
+String.prototype.addExclamation = function() {
+    return this + "!!!";
+};
+
+// Or standalone utility
+const addExclamation = (s) => s + "!!!";</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python"># Can't truly extend built-in types cleanly
+# Usually use standalone functions
+def add_exclamation(s: str) -> str:
+    return s + "!!!"
+
+# Or monkey-patch (discouraged)
+# str.add_exclamation = add_exclamation</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Extensions are statically resolved, type-safe, and IDE-discoverable. No runtime monkey-patching. They feel like real methods but don't modify the original class.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Object Declarations & Companion Objects</h2>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Singleton — guaranteed single instance
+object Database {
+    fun connect() { println("Connected") }
+}
+
+Database.connect()   // No constructor, no 'new'
+
+// Companion object — factory methods and static-like members
+class User(val name: String) {
+    companion object {
+        fun createGuest() = User("Guest")
+        const val MAX_NAME_LENGTH = 50
+    }
+}
+
+val guest = User.createGuest()
+println(User.MAX_NAME_LENGTH)</code></pre>
+                    </div>
+                </div>
+
+                <div class="exercise-box">
+                    <h4>📝 Try It Yourself</h4>
+                    <p>Create a <code>data class</code> called <code>Book</code> with <code>title</code>, <code>author</code>, and <code>year</code>. Then:</p>
+                    <ol>
+                        <li>Create a book instance</li>
+                        <li>Use <code>copy()</code> to create a new version with a different year</li>
+                        <li>Write an extension function <code>Book.summary()</code> that returns <code>"{title} by {author}"</code></li>
+                    </ol>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Your code here:
+
+
+
+
+
+// Expected output:
+// The Hobbit by J.R.R. Tolkien (1937)
+// The Hobbit by J.R.R. Tolkien (2001)</code></pre>
+                    </div>
+                    <div class="exercise-hint">
+                        <details>
+                            <summary>Stuck? Show hint</summary>
+                            <div class="exercise-hint-content">
+                                <code>data class Book(val title: String, val author: String, val year: Int)</code><br>
+                                <code>fun Book.summary() = "$title by $author ($year)"</code><br>
+                                <code>val book = Book("The Hobbit", "J.R.R. Tolkien", 1937)</code><br>
+                                <code>val newEdition = book.copy(year = 2001)</code>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="concept-check">
+                    <h4>🧠 Concept Check</h4>
+                    <p>What's the key difference between a regular <code>class</code> and a <code>data class</code>?</p>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'Data classes can have methods just like regular classes.')">Data classes cannot have methods</div>
+                    <div class="check-option" onclick="checkAnswer(this, true, 'Correct! The compiler auto-generates equals(), hashCode(), toString(), copy(), and componentN() functions.', '')">Data classes auto-generate equals, hashCode, toString, and copy</div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'Data classes are just regular classes with auto-generated functions. No performance difference.')">Data classes are faster at runtime</div>
+                    <div class="check-feedback"></div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="ch04-collections.html" class="nav-btn" id="prevLink">
+                        <span class="label">← Previous</span>
+                        <span class="title">Collections</span>
+                    </a>
+                    <a href="ch06-coroutines.html" class="nav-btn next" id="nextLink">
+                        <span class="label">Next Chapter →</span>
+                        <span class="title">Coroutines</span>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>Kotlin Crash Course — Chapter 5 of 7</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 2. Functions — Kotlin Crash Course</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-chapter="ch02">
+    <div class="mobile-nav">
+        <div class="mobile-nav-brand">Kotlin Crash Course</div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">Menu</button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">Kotlin Crash Course</div>
+            <div class="sidebar-tagline">From JS/Python to Android</div>
+            <div class="sidebar-progress">
+                <div class="sidebar-progress-label"><span>Progress</span><span>0%</span></div>
+                <div class="sidebar-progress-bar"><div class="sidebar-progress-fill"></div></div>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Chapters</h3>
+                <a href="index.html">Start Here</a>
+                <a href="ch01-basics.html" data-chapter="ch01">1. Basics & Types</a>
+                <a href="ch02-functions.html" class="active" data-chapter="ch02">2. Functions</a>
+                <a href="ch03-nullsafety.html" data-chapter="ch03">3. Null Safety</a>
+                <a href="ch04-collections.html" data-chapter="ch04">4. Collections</a>
+                <a href="ch05-oop.html" data-chapter="ch05">5. Classes & OOP</a>
+                <a href="ch06-coroutines.html" data-chapter="ch06">6. Coroutines</a>
+                <a href="ch07-android.html" data-chapter="ch07">7. Android & Compose</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 2</div>
+                    <h1 class="chapter-title">Functions</h1>
+                    <p class="chapter-description">Declaring functions, default arguments, named parameters, lambdas, and higher-order functions. Functions are first-class citizens in Kotlin.</p>
+                </div>
+
+                <div class="learning-objectives">
+                    <h3>By the end of this chapter, you will:</h3>
+                    <ul>
+                        <li>Declare functions with parameters and return types</li>
+                        <li>Use default arguments and named parameters</li>
+                        <li>Write single-expression functions</li>
+                        <li>Create and pass lambda expressions</li>
+                        <li>Understand higher-order functions and the <code>it</code> keyword</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>Declaring Functions</h2>
+                    <p>Functions in Kotlin start with the <code>fun</code> keyword. The parameter type comes <em>after</em> the parameter name, separated by a colon.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Function with parameters and return type
+fun greet(name: String): String {
+    return "Hello, $name!"
+}
+
+// Function with no return value (returns Unit, like void)
+fun printGreeting(name: String) {
+    println("Hello, $name!")
+}
+
+// Calling functions
+val message = greet("Alex")
+println(message)  // Hello, Alex!</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">function greet(name) {
+    return `Hello, ${name}!`;
+}
+
+const greet = (name) => `Hello, ${name}!`;</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">def greet(name: str) -> str:
+    return f"Hello, {name}!"</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Parameter types are required and come after the name (<code>name: String</code>). Return type comes after parameters (<code>): String</code>). No implicit return.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Default Arguments & Named Parameters</h2>
+                    <p>This is one of Kotlin's best features — inherited from Python but with static type safety.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">fun createUser(
+    name: String,
+    age: Int = 0,              // default value
+    isActive: Boolean = true   // default value
+) {
+    println("$name, $age, active=$isActive")
+}
+
+// All of these are valid:
+createUser("Alex")                          // Alex, 0, active=true
+createUser("Alex", 25)                      // Alex, 25, active=true
+createUser("Alex", isActive = false)        // Alex, 0, active=false
+createUser(name = "Alex", age = 25)         // named parameters — order doesn't matter!</code></pre>
+                    </div>
+
+                    <div class="info-box success-box">
+                        <strong>Why this matters:</strong> Named parameters let you skip optional arguments without passing dummy values. This eliminates the "boolean trap" you see in many APIs: <code>sendEmail(to, from, true, false, null)</code> becomes <code>sendEmail(to, from, encrypt = true)</code>.
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">function createUser(name, age = 0, isActive = true) {
+    console.log(name, age, isActive);
+}
+
+createUser("Alex");
+createUser("Alex", undefined, false);  // ugly!</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">def create_user(name, age=0, is_active=True):
+    print(name, age, is_active)
+
+create_user("Alex")
+create_user("Alex", is_active=False)  # named args</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Very similar to Python! But Kotlin checks types at compile time, so you get safety + convenience.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Single-Expression Functions</h2>
+                    <p>When a function body is a single expression, you can omit the curly braces and use <code>=</code>.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Instead of this:
+fun add(a: Int, b: Int): Int {
+    return a + b
+}
+
+// Write this:
+fun add(a: Int, b: Int): Int = a + b
+
+// Return type can even be inferred:
+fun multiply(a: Int, b: Int) = a * b</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Tip:</strong> Single-expression functions are idiomatic in Kotlin. Use them for simple getters, math operations, and any function that just returns a value.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Lambdas & Higher-Order Functions</h2>
+                    <p>Functions are first-class in Kotlin. You can pass them as arguments, return them, and store them in variables.</p>
+
+                    <h3>Lambda Syntax</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// A lambda (anonymous function)
+val square: (Int) -> Int = { x -> x * x }
+
+// If there's only one parameter, it's called `it` automatically
+val double: (Int) -> Int = { it * 2 }
+
+// Using lambdas
+println(square(5))    // 25
+println(double(5))    // 10</code></pre>
+                    </div>
+
+                    <h3>Higher-Order Functions</h3>
+                    <p>A higher-order function is a function that takes another function as a parameter or returns one.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Takes a function as parameter
+fun operateOn(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+// Usage
+val sum = operateOn(3, 4) { x, y -> x + y }     // 7
+val product = operateOn(3, 4) { x, y -> x * y } // 12
+
+// Trailing lambda syntax: if lambda is last arg, put it outside parentheses
+val max = operateOn(3, 4) { x, y ->
+    if (x > y) x else y
+}</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">const square = x => x * x;
+
+function operateOn(a, b, operation) {
+    return operation(a, b);
+}
+
+const sum = operateOn(3, 4, (x, y) => x + y);</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">square = lambda x: x * x
+
+def operate_on(a, b, operation):
+    return operation(a, b)
+
+sum_val = operate_on(3, 4, lambda x, y: x + y)</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> The <code>it</code> convention and trailing lambda syntax make Kotlin lambdas especially clean. The type system ensures your lambda matches the expected signature at compile time.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Vararg Parameters</h2>
+                    <p>Accept a variable number of arguments with <code>vararg</code> (like <code>*args</code> in Python or <code>...args</code> in JS).</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">fun sumAll(vararg numbers: Int): Int {
+    return numbers.sum()
+}
+
+sumAll(1, 2, 3)           // 6
+sumAll(1, 2, 3, 4, 5)     // 15
+
+// Spread operator to pass an array
+val nums = intArrayOf(1, 2, 3)
+sumAll(*nums)             // 6</code></pre>
+                    </div>
+                </div>
+
+                <div class="exercise-box">
+                    <h4>📝 Try It Yourself</h4>
+                    <p>Write a function <code>formatPrice</code> that takes a <code>Double</code> and an optional <code>currency</code> parameter (default <code>"$"</code>), and returns a formatted string like <code>"$19.99"</code> or <code>"€19.99"</code>.</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Your code here:
+
+
+
+
+// Should work:
+// println(formatPrice(19.99))       // $19.99
+// println(formatPrice(19.99, "€"))  // €19.99</code></pre>
+                    </div>
+                    <div class="exercise-hint">
+                        <details>
+                            <summary>Stuck? Show hint</summary>
+                            <div class="exercise-hint-content">
+                                <code>fun formatPrice(price: Double, currency: String = "$") = "$currency$price"</code> — but this shows all decimals. Try <code>String.format("%s%.2f", currency, price)</code> for 2 decimal places.
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="concept-check">
+                    <h4>🧠 Concept Check</h4>
+                    <p>What does this code print?</p>
+                    <div class="code-block-wrapper">
+                        <pre><code class="language-kotlin">fun greet(name: String, greeting: String = "Hello") = "$greeting, $name!"
+
+println(greet("Alex", greeting = "Hi"))</code></pre>
+                    </div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'The default value is overridden when you pass the named parameter.')">Hello, Alex!</div>
+                    <div class="check-option" onclick="checkAnswer(this, true, 'Correct! Named parameter `greeting = "Hi"` overrides the default.', '')">Hi, Alex!</div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'It does compile! Named parameters in Kotlin are fully supported.')">It won't compile — Kotlin doesn't support named parameters</div>
+                    <div class="check-feedback"></div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="ch01-basics.html" class="nav-btn" id="prevLink">
+                        <span class="label">← Previous</span>
+                        <span class="title">Basics & Types</span>
+                    </a>
+                    <a href="ch03-nullsafety.html" class="nav-btn next" id="nextLink">
+                        <span class="label">Next Chapter →</span>
+                        <span class="title">Null Safety</span>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>Kotlin Crash Course — Chapter 2 of 7</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

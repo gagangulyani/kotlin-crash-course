@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 6. Coroutines — Kotlin Crash Course</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-chapter="ch06">
+    <div class="mobile-nav">
+        <div class="mobile-nav-brand">Kotlin Crash Course</div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">Menu</button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">Kotlin Crash Course</div>
+            <div class="sidebar-tagline">From JS/Python to Android</div>
+            <div class="sidebar-progress">
+                <div class="sidebar-progress-label"><span>Progress</span><span>0%</span></div>
+                <div class="sidebar-progress-bar"><div class="sidebar-progress-fill"></div></div>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Chapters</h3>
+                <a href="index.html">Start Here</a>
+                <a href="ch01-basics.html" data-chapter="ch01">1. Basics & Types</a>
+                <a href="ch02-functions.html" data-chapter="ch02">2. Functions</a>
+                <a href="ch03-nullsafety.html" data-chapter="ch03">3. Null Safety</a>
+                <a href="ch04-collections.html" data-chapter="ch04">4. Collections</a>
+                <a href="ch05-oop.html" data-chapter="ch05">5. Classes & OOP</a>
+                <a href="ch06-coroutines.html" class="active" data-chapter="ch06">6. Coroutines</a>
+                <a href="ch07-android.html" data-chapter="ch07">7. Android & Compose</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 6</div>
+                    <h1 class="chapter-title">Coroutines</h1>
+                    <p class="chapter-description">Async programming without callback hell. Learn suspend functions, launch, async/await, and Flow for reactive streams.</p>
+                </div>
+
+                <div class="learning-objectives">
+                    <h3>By the end of this chapter, you will:</h3>
+                    <ul>
+                        <li>Understand why coroutines exist and how they differ from threads</li>
+                        <li>Launch coroutines with <code>launch</code> and <code>async</code></li>
+                        <li>Write and call <code>suspend</code> functions</li>
+                        <li>Handle cancellation and exceptions</li>
+                        <li>Understand the basics of Flow</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>The Problem with Threads</h2>
+                    <p>Traditional threading is expensive. Each thread consumes ~1MB of memory, and context switching is slow. You cannot launch millions of threads.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Bad: Creating a thread for every network request
+fun fetchUserBad(userId: String) {
+    thread {   // Expensive! Each thread = ~1MB memory
+        val user = makeNetworkRequest(userId)
+        println(user)
+    }
+}
+
+// Good: Coroutine — lightweight, managed by Kotlin
+suspend fun fetchUserGood(userId: String) {
+    val user = makeNetworkRequest(userId)  // suspend, not block
+    println(user)
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Key insight:</strong> Coroutines are <strong>lightweight threads</strong> managed by Kotlin's runtime, not the operating system. You can launch millions of them on a single thread. They suspend instead of block — freeing the underlying thread to do other work.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Your First Coroutine</h2>
+                    <p>To launch a coroutine, you need a <strong>CoroutineScope</strong>. For learning, use <code>runBlocking</code>. In real apps, use structured scopes tied to lifecycle (ViewModelScope, LifecycleScope).</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">import kotlinx.coroutines.*
+
+fun main() = runBlocking {   // Blocks main thread until coroutines complete
+    launch {                 // Launches a new coroutine
+        delay(1000L)         // Non-blocking delay (like setTimeout)
+        println("World!")
+    }
+    println("Hello,")          // Prints immediately
+    // Output: Hello, (wait 1s) World!
+}</code></pre>
+                    </div>
+
+                    <h3>launch vs async</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">runBlocking {
+    // launch: fire and forget, returns Job
+    val job = launch {
+        delay(100)
+        println("Done")
+    }
+    job.join()   // Wait for completion
+
+    // async: returns a result, returns Deferred&lt;T&gt;
+    val deferred = async {
+        delay(100)
+        "Result"
+    }
+    val result = deferred.await()   // "Result"
+}</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">// Promise-based
+async function main() {
+    setTimeout(() => console.log("World!"), 1000);
+    console.log("Hello,");
+}
+
+// Or with Promise
+const result = await fetch(url);
+const data = await result.json();</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">import asyncio
+
+async def main():
+    await asyncio.sleep(1)
+    print("World!")
+
+asyncio.run(main())</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Coroutines are more structured than JS Promises. launch/async run in a scope, and child coroutines are cancelled when the parent is. This prevents leaks. JS and Python have no built-in structured concurrency.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Suspend Functions</h2>
+                    <p>A <code>suspend</code> function can pause execution without blocking the thread. It can only be called from another suspend function or a coroutine.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Mark a function as suspend
+suspend fun fetchUser(id: String): User {
+    delay(1000)   // Suspend for 1 second, but don't block the thread
+    return User(id, "Alex")
+}
+
+suspend fun fetchOrders(userId: String): List&lt;Order&gt; {
+    delay(500)
+    return listOf(Order("1"), Order("2"))
+}
+
+// Sequential execution (default)
+suspend fun loadDashboard(userId: String) {
+    val user = fetchUser(userId)        // Wait for user
+    val orders = fetchOrders(user.id)   // Then fetch orders
+    println("Loaded $user with $orders")
+}
+
+// Concurrent execution with async
+suspend fun loadDashboardFast(userId: String) {
+    coroutineScope {   // Creates a scope for structured concurrency
+        val userDeferred = async { fetchUser(userId) }
+        val ordersDeferred = async { fetchOrders(userId) }
+
+        val user = userDeferred.await()       // Both started concurrently!
+        val orders = ordersDeferred.await()   // Wait for both
+        println("Loaded $user with $orders")
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Rule:</strong> Suspend functions look synchronous but execute asynchronously. Sequential by default, concurrent when you explicitly use async. This is the opposite of JS where everything concurrent by default.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Cancellation</h2>
+                    <p>Coroutines are cooperative. They check for cancellation at suspension points. Use <code>isActive</code> for long-running CPU work.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val job = launch {
+    repeat(1000) { i ->
+        println("Working $i...")
+        delay(500)
+    }
+}
+
+delay(1300)    // Let it print a few times
+job.cancel()   // Cancel the coroutine
+job.join()     // Wait for cancellation to complete
+
+// For CPU-intensive work, check isActive
+launch {
+    while (isActive) {
+        doSomeWork()
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Flow (Reactive Streams)</h2>
+                    <p>Flow is a cold stream of values — like RxJava or JS Observables, but built into coroutines.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">import kotlinx.coroutines.flow.*
+
+// A Flow emits multiple values over time
+fun userUpdates(): Flow&lt;User&gt; = flow {
+    emit(User("1", "Alex"))
+    delay(1000)
+    emit(User("1", "Alex Updated"))
+}
+
+// Collecting a Flow
+runBlocking {
+    userUpdates().collect { user ->
+        println("Received: $user")
+    }
+}
+
+// Flow operators (like collections!)
+userUpdates()
+    .filter { it.name.startsWith("A") }
+    .map { it.name.uppercase() }
+    .collect { println(it) }</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Flow vs LiveData:</strong> In modern Android, Flow replaces LiveData for reactive data. Flow is lifecycle-aware when collected with <code>repeatOnLifecycle</code>, works with any coroutine scope, and supports backpressure and complex transformations.
+                    </div>
+                </div>
+
+                <div class="exercise-box">
+                    <h4>Try It Yourself</h4>
+                    <p>Write a suspend function that fetches two URLs concurrently and returns the combined string length of both responses.</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">suspend fun fetchBoth(url1: String, url2: String): Int {
+    // Your code here:
+
+
+}
+
+// Should work like:
+// val total = fetchBoth("https://api1.com", "https://api2.com")
+// println(total)  // sum of both response lengths</code></pre>
+                    </div>
+                    <div class="exercise-hint">
+                        <details>
+                            <summary>Stuck? Show hint</summary>
+                            <div class="exercise-hint-content">
+                                Use <code>coroutineScope { }</code>, launch two <code>async</code> blocks, <code>await()</code> both, then sum their <code>.length</code>.
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="concept-check">
+                    <h4>Concept Check</h4>
+                    <p>What happens if you call <code>delay(1000)</code> inside a regular (non-suspend) function?</p>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'delay is not a blocking sleep. It only works in suspend functions or coroutines.')">It blocks the thread for 1 second</div>
+                    <div class="check-option" onclick="checkAnswer(this, true, 'Correct! delay is a suspend function and can only be called from another suspend function or coroutine.', '')">Compile error — delay is a suspend function</div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'delay is not a standard function; it requires a coroutine context.')">Nothing — it works like Thread.sleep</div>
+                    <div class="check-feedback"></div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="ch05-oop.html" class="nav-btn" id="prevLink">
+                        <span class="label">Previous</span>
+                        <span class="title">Classes & OOP</span>
+                    </a>
+                    <a href="ch07-android.html" class="nav-btn next" id="nextLink">
+                        <span class="label">Next Chapter</span>
+                        <span class="title">Android & Compose</span>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>Kotlin Crash Course — Chapter 6 of 7</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

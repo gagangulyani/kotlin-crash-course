@@ -1,22 +1,35 @@
 # Kotlin Crash Course
 
-> A dark-mode, interactive HTML reference for developers coming from JavaScript/Python who want to master Kotlin — with an Android-first focus.
+> A hands-on, chapter-by-chapter guide for JavaScript and Python developers who want to build Android apps with Kotlin.
 
-[**🚀 Open the Course**](https://gagangulyani.github.io/kotlin-crash-course/)
+[**🚀 Start the Course**](https://gagangulyani.github.io/kotlin-crash-course/)
 
 ---
 
 ## What's Inside
 
-A single, self-contained HTML file packed with:
+A multi-file, interactive crash course with **7 progressive chapters**. Each chapter includes:
 
-- **Syntax Cheat Sheet** — Quick references for variables, functions, collections, classes, and extension functions
-- **Core Concepts** — Deep dives into null safety, smart casting, coroutines, and sealed classes
-- **Android Section** — Jetpack Compose, ViewModel + StateFlow, and side effects
-- **7-Week Roadmap** — Structured learning path from syntax to Kotlin Multiplatform
-- **Interactive Quiz** — Test your understanding before building real apps
-- **Global Search** — Instantly find any topic across all sections
-- **One-Click Copy** — Every code block has a copy button
+- **Detailed explanations** with real-world context
+- **Multiple code examples** for every concept (syntax-highlighted with highlight.js)
+- **JavaScript & Python comparisons** — expandable side-by-side boxes showing how Kotlin differs
+- **Try-it-yourself exercises** with hidden hints
+- **Concept check quizzes** with instant feedback
+- **Progressive difficulty** — each chapter builds on the previous
+
+---
+
+## Course Chapters
+
+| # | Chapter | Topics | Est. Time |
+|---|---------|--------|-----------|
+| 1 | [Basics & Types](ch01-basics.html) | `val`/`var`, type inference, strings, ranges | 15 min |
+| 2 | [Functions](ch02-functions.html) | Parameters, defaults, named args, lambdas, higher-order | 20 min |
+| 3 | [Null Safety](ch03-nullsafety.html) | Nullable types, `?.`, `?:`, `!!`, `let`, smart cast | 20 min |
+| 4 | [Collections](ch04-collections.html) | List, Set, Map, `map`, `filter`, `reduce`, ranges | 20 min |
+| 5 | [Classes & OOP](ch05-oop.html) | Data classes, sealed classes, inheritance, extensions | 25 min |
+| 6 | [Coroutines](ch06-coroutines.html) | `suspend`, `launch`, `async`, `Flow`, cancellation | 25 min |
+| 7 | [Android & Compose](ch07-android.html) | Jetpack Compose, ViewModel, StateFlow, navigation | 25 min |
 
 ---
 
@@ -24,13 +37,15 @@ A single, self-contained HTML file packed with:
 
 | Feature | Description |
 |---------|-------------|
-| 🌙 Dark Mode UI | Deep purple/blue theme with glow effects |
-| 🔍 Global Search | Real-time search across all sections |
+| 🌙 Dark Mode UI | Clean dark theme optimized for long reading sessions |
+| 🔍 JS/Python Comparisons | Side-by-side expandable boxes comparing syntax |
+| 📝 Interactive Exercises | Code-it-yourself challenges with hints |
+| 🧠 Concept Checks | Inline quizzes to verify understanding |
+| 📊 Progress Tracking | LocalStorage-based progress bar and chapter completion |
 | 📋 Copy Code | One-click copy on every code block |
-| 🧠 Interactive Quiz | Instant correct/wrong feedback |
-| 📊 Progress Bar | Tracks your scroll progress |
-| 📱 Responsive | Works on mobile and desktop |
-| ⚡ Zero Dependencies | Pure HTML/CSS/JS — no build step |
+| 🎹 Keyboard Navigation | `← →` arrow keys to jump between chapters |
+| 📱 Responsive | Sidebar on desktop, hamburger menu on mobile |
+| ⚡ Zero Build Step | Plain HTML/CSS/JS — works anywhere |
 
 ---
 
@@ -38,7 +53,7 @@ A single, self-contained HTML file packed with:
 
 - JavaScript/Python developers switching to Kotlin
 - Web developers diving into Android
-- Anyone who wants a quick, searchable Kotlin reference
+- Anyone who wants a structured, hands-on Kotlin reference
 
 ---
 
@@ -47,39 +62,53 @@ A single, self-contained HTML file packed with:
 ```bash
 git clone https://github.com/gagangulyani/kotlin-crash-course.git
 cd kotlin-crash-course
-open index.html
+# Open index.html in your browser
+open index.html        # macOS
+xdg-open index.html    # Linux
+start index.html       # Windows
 ```
 
-Or simply double-click `index.html` — no server required.
+Or serve with any static file server:
+```bash
+npx serve .     # if you have Node.js
+python3 -m http.server 8000
+```
+
+Then visit `http://localhost:8000`.
 
 ---
 
-## Learning Roadmap
+## Project Structure
 
-| Week | Focus | Type |
-|------|-------|------|
-| 1 | Syntax basics, collections, functions | Cheat Sheet |
-| 2 | Null safety, classes, data classes | Theory |
-| 3 | Coroutines basics | Theory |
-| 4 | Jetpack Compose basics | Cheat Sheet |
-| 5 | ViewModel + StateFlow | Theory |
-| 6 | Navigation + simple app | Project |
-| 7+ | Kotlin Multiplatform | Theory |
+```
+kotlin-crash-course/
+├── index.html              # Landing page with chapter overview
+├── css/
+│   └── style.css           # Shared dark theme styles
+├── js/
+│   └── main.js             # Navigation, progress, quiz logic
+├── ch01-basics.html        # Chapter 1: Basics & Types
+├── ch02-functions.html     # Chapter 2: Functions
+├── ch03-nullsafety.html    # Chapter 3: Null Safety
+├── ch04-collections.html   # Chapter 4: Collections
+├── ch05-oop.html           # Chapter 5: Classes & OOP
+├── ch06-coroutines.html    # Chapter 6: Coroutines
+├── ch07-android.html       # Chapter 7: Android & Compose
+└── README.md
+```
 
 ---
 
-## Resources
+## Tools You'll Need for Practice
 
-- [Kotlin Documentation](https://kotlinlang.org/docs/home.html)
-- [Kotlin Playground](https://play.kotlinlang.org)
-- [Android Basics with Compose](https://developer.android.com/courses/android-basics-compose/course)
-- [Coroutines Guide](https://kotlinlang.org/docs/coroutines-guide.html)
+- **Android Studio** — [developer.android.com/studio](https://developer.android.com/studio)
+- **Kotlin Playground** — [play.kotlinlang.org](https://play.kotlinlang.org)
 
 ---
 
 ## Contributing
 
-Found a typo or want to add a topic? Open an issue or PR!
+Found a typo, unclear explanation, or want to add a chapter? Open an issue or PR!
 
 ---
 

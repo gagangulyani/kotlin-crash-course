@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 1. Basics & Types — Kotlin Crash Course</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-chapter="ch01">
+    <div class="mobile-nav">
+        <div class="mobile-nav-brand">Kotlin Crash Course</div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">Menu</button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">Kotlin Crash Course</div>
+            <div class="sidebar-tagline">From JS/Python to Android</div>
+            <div class="sidebar-progress">
+                <div class="sidebar-progress-label"><span>Progress</span><span>0%</span></div>
+                <div class="sidebar-progress-bar"><div class="sidebar-progress-fill"></div></div>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Chapters</h3>
+                <a href="index.html">Start Here</a>
+                <a href="ch01-basics.html" class="active" data-chapter="ch01">1. Basics & Types</a>
+                <a href="ch02-functions.html" data-chapter="ch02">2. Functions</a>
+                <a href="ch03-nullsafety.html" data-chapter="ch03">3. Null Safety</a>
+                <a href="ch04-collections.html" data-chapter="ch04">4. Collections</a>
+                <a href="ch05-oop.html" data-chapter="ch05">5. Classes & OOP</a>
+                <a href="ch06-coroutines.html" data-chapter="ch06">6. Coroutines</a>
+                <a href="ch07-android.html" data-chapter="ch07">7. Android & Compose</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 1</div>
+                    <h1 class="chapter-title">Basics & Types</h1>
+                    <p class="chapter-description">Variables, constants, type inference, strings, numbers, and basic operators. Learn how Kotlin's syntax differs from JS and Python.</p>
+                </div>
+
+                <div class="learning-objectives">
+                    <h3>By the end of this chapter, you will:</h3>
+                    <ul>
+                        <li>Understand the difference between <code>val</code> and <code>var</code></li>
+                        <li>Know Kotlin's basic types and how type inference works</li>
+                        <li>Use string templates and multi-line strings</li>
+                        <li>Work with basic operators and expressions</li>
+                        <li>Understand why Kotlin has no primitive types</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>Variables: val vs var</h2>
+                    <p>In Kotlin, every variable is declared with either <code>val</code> or <code>var</code>. This choice is important because Kotlin strongly encourages immutability.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val name = "Alex"      // Immutable — like JS `const` or Python doesn't have this
+var age = 25           // Mutable — like JS `let` or Python variable
+
+name = "Sam"           // ❌ ERROR: Val cannot be reassigned
+age = 26               // ✅ OK</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Best Practice:</strong> Always start with <code>val</code>. Only use <code>var</code> when you absolutely need to change the value. This prevents an entire class of bugs.
+                    </div>
+
+                    <h3>Type Inference</h3>
+                    <p>Kotlin figures out the type from the value you assign. But you can be explicit too:</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val inferred = "Hello"           // Compiler knows this is String
+val explicit: String = "Hello"   // You can specify the type after a colon
+
+val count = 42                   // Int
+val price = 19.99                // Double
+val isActive = true              // Boolean</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">const name = "Alex";
+let age = 25;
+
+// No type annotations in JS
+// typeof name === "string"</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">name = "Alex"      # no const
+age = 25
+
+# Type hints exist but are optional
+name: str = "Alex"</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> <code>val</code> is the default mindset. Type inference is automatic but the type is fixed at compile time — no runtime type changes.</p>
+                        </div>
+                    </div>
+
+                    <h3>Basic Types</h3>
+                    <table>
+                        <tr><th>Kotlin Type</th><th>Description</th><th>Example</th></tr>
+                        <tr><td><code>Int</code></td><td>32-bit integer</td><td><code>42</code></td></tr>
+                        <tr><td><code>Long</code></td><td>64-bit integer</td><td><code>42L</code></td></tr>
+                        <tr><td><code>Double</code></td><td>64-bit floating point</td><td><code>3.14</code></td></tr>
+                        <tr><td><code>Float</code></td><td>32-bit floating point</td><td><code>3.14f</code></td></tr>
+                        <tr><td><code>Boolean</code></td><td>true or false</td><td><code>true</code></td></tr>
+                        <tr><td><code>Char</code></td><td>Single character</td><td><code>'A'</code></td></tr>
+                        <tr><td><code>String</code></td><td>Text</td><td><code>"Hello"</code></td></tr>
+                    </table>
+
+                    <div class="info-box">
+                        <strong>Note:</strong> Kotlin has no "primitive" types at the language level. <code>Int</code>, <code>Double</code>, etc. are all objects. The compiler optimizes them to JVM primitives when possible, but you don't need to think about it.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Strings</h2>
+                    <p>Strings in Kotlin are more powerful than in JS or Python, especially with templates and multi-line support.</p>
+
+                    <h3>String Templates</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val name = "Alex"
+val age = 25
+
+// Simple variable
+val greeting = "Hello, $name!"           // "Hello, Alex!"
+
+// Expression in braces
+val nextYear = "You'll be ${age + 1}"    // "You'll be 26"
+
+// Raw strings (no escaping needed)
+val path = "C:\\Users\\Alex"             // regular string — need escaping
+val rawPath = """C:\Users\Alex"""       // raw string — no escaping!</code></pre>
+                    </div>
+
+                    <h3>Multi-line Strings</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val json = """
+    {
+        "name": "$name",
+        "age": $age
+    }
+""".trimIndent()   // Removes leading whitespace from each line</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">const name = "Alex";
+const greeting = `Hello, ${name}!`;  // template literal
+const raw = `Line 1
+Line 2`;                              // multi-line</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">name = "Alex"
+greeting = f"Hello, {name}!"         # f-string
+raw = """Line 1
+Line 2"""                             # triple quotes</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Templates work in regular strings too — no special <code>`</code> or <code>f</code> prefix needed. Raw strings use triple quotes and preserve formatting.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Type Conversion</h2>
+                    <p>Kotlin does not do implicit type conversion. You must be explicit.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val i = 10
+val d = i.toDouble()     // ✅ 10.0
+// val bad: Double = i   // ❌ ERROR: Type mismatch
+
+val s = "42"
+val num = s.toInt()      // ✅ 42
+// val bad2 = "abc".toInt()  // ❌ Runtime exception!</code></pre>
+                    </div>
+
+                    <div class="warning-box info-box">
+                        <strong>Watch out:</strong> Unlike JavaScript, <code>"5" + 3</code> is not <code>"53"</code> in Kotlin — it's a compile error. Kotlin won't silently convert types for you.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Comments</h2>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Single line comment
+
+/*
+ * Multi-line comment
+ * Just like C, Java, JS
+ */
+
+/**
+ * KDoc — Kotlin's documentation comment
+ * Used to generate API docs
+ * @param name The user's name
+ */</code></pre>
+                    </div>
+                </div>
+
+                <div class="exercise-box">
+                    <h4>📝 Try It Yourself</h4>
+                    <p>Declare a <code>val</code> for your name, a <code>var</code> for your age, and print a sentence using a string template that says:</p>
+                    <p><em>"My name is [name] and next year I will be [age+1] years old."</em></p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Your code here:
+
+
+
+
+// Run it at play.kotlinlang.org</code></pre>
+                    </div>
+                    <div class="exercise-hint">
+                        <details>
+                            <summary>Stuck? Show hint</summary>
+                            <div class="exercise-hint-content">
+                                Use <code>val name = "Your Name"</code>, <code>var age = 25</code>, and <code>println("My name is $name and next year I will be ${age + 1} years old.")</code>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="concept-check">
+                    <h4>🧠 Concept Check</h4>
+                    <p>What will happen if you try to reassign a <code>val</code>?</p>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'Nope. The compiler catches it before you even run the code.')">It will compile but crash at runtime</div>
+                    <div class="check-option" onclick="checkAnswer(this, true, 'Exactly! Kotlin is statically typed. The compiler prevents this mistake entirely.', '')">It will not compile — the IDE shows an error immediately</div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'Not in Kotlin. Mutability is strictly enforced by the compiler.')">It will work fine, just like reassigning a JS const in non-strict mode</div>
+                    <div class="check-feedback"></div>
+                </div>
+
+                <div class="chapter-nav">
+                    <div></div>
+                    <a href="ch02-functions.html" class="nav-btn next" id="nextLink">
+                        <span class="label">Next Chapter</span>
+                        <span class="title">Functions →</span>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>Kotlin Crash Course — Chapter 1 of 7</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

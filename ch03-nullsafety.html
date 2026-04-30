@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 3. Null Safety — Kotlin Crash Course</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-chapter="ch03">
+    <div class="mobile-nav">
+        <div class="mobile-nav-brand">Kotlin Crash Course</div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">Menu</button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">Kotlin Crash Course</div>
+            <div class="sidebar-tagline">From JS/Python to Android</div>
+            <div class="sidebar-progress">
+                <div class="sidebar-progress-label"><span>Progress</span><span>0%</span></div>
+                <div class="sidebar-progress-bar"><div class="sidebar-progress-fill"></div></div>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Chapters</h3>
+                <a href="index.html">Start Here</a>
+                <a href="ch01-basics.html" data-chapter="ch01">1. Basics & Types</a>
+                <a href="ch02-functions.html" data-chapter="ch02">2. Functions</a>
+                <a href="ch03-nullsafety.html" class="active" data-chapter="ch03">3. Null Safety</a>
+                <a href="ch04-collections.html" data-chapter="ch04">4. Collections</a>
+                <a href="ch05-oop.html" data-chapter="ch05">5. Classes & OOP</a>
+                <a href="ch06-coroutines.html" data-chapter="ch06">6. Coroutines</a>
+                <a href="ch07-android.html" data-chapter="ch07">7. Android & Compose</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 3</div>
+                    <h1 class="chapter-title">Null Safety</h1>
+                    <p class="chapter-description">Kotlin's crown jewel. Learn how the type system prevents billion-dollar mistakes by making nullability explicit and safe.</p>
+                </div>
+
+                <div class="learning-objectives">
+                    <h3>By the end of this chapter, you will:</h3>
+                    <ul>
+                        <li>Understand nullable (<code>String?</code>) vs non-nullable (<code>String</code>) types</li>
+                        <li>Use the safe call operator <code>?.</code> and Elvis operator <code>?:</code></li>
+                        <li>Know when (and when not) to use <code>!!</code></li>
+                        <li>Handle nullable collections and chaining</li>
+                        <li>Use <code>let</code>, <code>run</code>, and <code>also</code> with nullables</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>The Problem: Null is Dangerous</h2>
+                    <p>In JavaScript and Python, any variable can be <code>null</code> or <code>None</code> at any time. This leads to runtime crashes that are hard to predict.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-javascript">// JavaScript
+function getLength(name) {
+    return name.length;  // 💥 CRASH if name is null or undefined
+}
+
+getLength(null);  // TypeError: Cannot read properties of null</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-python"># Python
+def get_length(name):
+    return len(name)  # 💥 CRASH if name is None
+
+get_length(None)  # TypeError: object of type 'NoneType' has no len()</code></pre>
+                    </div>
+
+                    <p>Kotlin solves this at the <strong>type system level</strong>. A variable either can be null (and the compiler forces you to handle it) or it cannot be null (and it never will be).</p>
+                </div>
+
+                <div class="section">
+                    <h2>Nullable vs Non-Nullable Types</h2>
+                    <p>In Kotlin, types are non-nullable by default. To allow null, you add <code>?</code> to the type.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">var name: String = "Alex"
+name = null           // ❌ COMPILE ERROR: Null can not be a value of a non-null type String
+
+var nullableName: String? = "Alex"
+nullableName = null   // ✅ OK — String? means "String or null"</code></pre>
+                    </div>
+
+                    <div class="info-box success-box">
+                        <strong>This is huge:</strong> The compiler knows which variables can be null. It won't let you call <code>.length</code> on a <code>String?</code> without first checking for null. This catches NPEs <em>before you run the program</em>.
+                    </div>
+
+                    <h3>Safe Call Operator: <code>?.</code></h3>
+                    <p>Call a method or access a property only if the receiver is not null. Otherwise, return null.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val name: String? = null
+
+// Without safe call — COMPILE ERROR:
+// val length = name.length  // ❌ Only safe (?.) or non-null asserted (!!.) calls allowed
+
+// With safe call:
+val length: Int? = name?.length   // ✅ null — because name is null
+
+val realName: String? = "Alex"
+val realLength: Int? = realName?.length   // ✅ 4</code></pre>
+                    </div>
+
+                    <h3>Chaining Safe Calls</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">data class Address(val city: String?)
+data class Person(val address: Address?)
+
+val person: Person? = null
+
+// Chain of safe calls — returns null if ANY link is null
+val city: String? = person?.address?.city
+
+// Without safe calls, this would be:
+// val city = if (person != null && person.address != null) person.address.city else null</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Elvis Operator: <code>?:</code></h2>
+                    <p>Provide a default value when something is null. Named after Elvis Presley's hair (<code>?:</code> looks like his pompadour).</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val name: String? = null
+
+// If name is null, use "Unknown" instead
+val displayName = name ?: "Unknown"   // "Unknown"
+
+// Works with any expression
+val length = name?.length ?: 0        // 0
+
+// Can throw as default too
+val critical = name ?: throw IllegalArgumentException("Name required!")
+
+// Equivalent to:
+// val displayName = if (name != null) name else "Unknown"</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">const name = null;
+const display = name ?? "Unknown";     // nullish coalescing
+const length = name?.length ?? 0;      // optional chaining + ??</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">name = None
+display = name or "Unknown"           # but or is truthy, not null-check
+length = len(name) if name else 0     # verbose</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Kotlin had <code>?.</code> and <code>?:</code> years before JS added <code>?.</code> and <code>??</code>. But Kotlin's version is type-safe — the compiler tracks what can be null through the whole chain.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>The <code>!!</code> Operator: Use With Caution</h2>
+                    <p>Converts a nullable type to non-nullable, crashing at runtime if it's actually null. Think of it as "I know better than the compiler."</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val name: String? = null
+
+val length = name!!.length   // 💥 NullPointerException at runtime!
+
+// Only use !! when you are 100% sure it's not null
+// Better alternatives exist almost always</code></pre>
+                    </div>
+
+                    <div class="error-box info-box">
+                        <strong>Rule of thumb:</strong> If you're using <code>!!</code>, you're probably doing something wrong. There is almost always a safer alternative: <code>?.</code>, <code>?:</code>, <code>let</code>, or restructuring your code.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Safe Casts: <code>as?</code></h2>
+                    <p>Cast a value to a type, returning null if the cast fails instead of throwing an exception.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val x: Any = "Hello"
+
+val str: String? = x as? String     // "Hello"
+val num: Int? = x as? Int           // null (no crash!)
+
+// Without safe cast:
+// val num = x as Int               // 💥 ClassCastException</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2><code>let</code> with Nullables</h2>
+                    <p>Use <code>let</code> to execute a block of code only if a value is not null.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val name: String? = "Alex"
+
+// Only runs if name is not null
+name?.let { nonNullName ->
+    println("Name is $nonNullName")
+    println("Length is ${nonNullName.length}")
+}
+
+// Inside let, `it` refers to the non-null value
+name?.let {
+    println("Hello, $it")
+}
+
+// Chaining: compute only if all values exist
+val result = name?.let { it.uppercase() } ?: "EMPTY"</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>When to use let:</strong> Perfect for transforming nullable values, doing multiple operations on a nullable, or early-return patterns. Avoid nesting <code>let</code> too deeply — flatten with <code>?: return</code> or early returns.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Nullable Collections</h2>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val list: List<String>? = listOf("a", "b", "c")
+
+// Safe access to collection
+val first = list?.firstOrNull() ?: "default"
+
+// Nullable elements inside a collection
+val nullableList: List<String?> = listOf("a", null, "c")
+val filtered = nullableList.filterNotNull()   // ["a", "c"]
+
+// Map with nullable values
+val map: Map<String, String?> = mapOf("key" to null)
+val value = map["key"] ?: "missing"</code></pre>
+                    </div>
+                </div>
+
+                <div class="exercise-box">
+                    <h4>📝 Try It Yourself</h4>
+                    <p>You have a nullable <code>email</code> string. Write a single expression that:</p>
+                    <ol>
+                        <li>Returns the email in lowercase if it's not null and contains <code>"@"</code></li>
+                        <li>Returns <code>"invalid"</code> otherwise</li>
+                    </ol>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val email: String? = "ALEX@EXAMPLE.COM"
+
+// Your single expression here:
+val result = 
+
+println(result)  // Should print: alex@example.com</code></pre>
+                    </div>
+                    <div class="exercise-hint">
+                        <details>
+                            <summary>Stuck? Show hint</summary>
+                            <div class="exercise-hint-content">
+                                <code>email?.takeIf { it.contains("@") }?.lowercase() ?: "invalid"</code>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="concept-check">
+                    <h4>🧠 Concept Check</h4>
+                    <p>What is the type of <code>result</code>?</p>
+                    <div class="code-block-wrapper">
+                        <pre><code class="language-kotlin">val name: String? = "Alex"
+val result = name?.length</code></pre>
+                    </div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'The safe call ?. returns null if name is null, so the result must be nullable.')">Int</div>
+                    <div class="check-option" onclick="checkAnswer(this, true, 'Correct! name?.length returns Int? because name could be null, making the whole expression nullable.', '')">Int?</div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'name is String?, but name?.length unwraps to Int?.')">String?</div>
+                    <div class="check-feedback"></div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="ch02-functions.html" class="nav-btn" id="prevLink">
+                        <span class="label">← Previous</span>
+                        <span class="title">Functions</span>
+                    </a>
+                    <a href="ch04-collections.html" class="nav-btn next" id="nextLink">
+                        <span class="label">Next Chapter →</span>
+                        <span class="title">Collections</span>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>Kotlin Crash Course — Chapter 3 of 7</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

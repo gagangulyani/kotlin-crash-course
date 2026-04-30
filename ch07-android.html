@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch 7. Android & Compose — Kotlin Crash Course</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-chapter="ch07">
+    <div class="mobile-nav">
+        <div class="mobile-nav-brand">Kotlin Crash Course</div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">Menu</button>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">Kotlin Crash Course</div>
+            <div class="sidebar-tagline">From JS/Python to Android</div>
+            <div class="sidebar-progress">
+                <div class="sidebar-progress-label"><span>Progress</span><span>0%</span></div>
+                <div class="sidebar-progress-bar"><div class="sidebar-progress-fill"></div></div>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Chapters</h3>
+                <a href="index.html">Start Here</a>
+                <a href="ch01-basics.html" data-chapter="ch01">1. Basics & Types</a>
+                <a href="ch02-functions.html" data-chapter="ch02">2. Functions</a>
+                <a href="ch03-nullsafety.html" data-chapter="ch03">3. Null Safety</a>
+                <a href="ch04-collections.html" data-chapter="ch04">4. Collections</a>
+                <a href="ch05-oop.html" data-chapter="ch05">5. Classes & OOP</a>
+                <a href="ch06-coroutines.html" data-chapter="ch06">6. Coroutines</a>
+                <a href="ch07-android.html" class="active" data-chapter="ch07">7. Android & Compose</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+                <div class="chapter-header">
+                    <div class="chapter-number">Chapter 7</div>
+                    <h1 class="chapter-title">Android & Compose</h1>
+                    <p class="chapter-description">Build modern Android UIs with Jetpack Compose, manage state with ViewModel and StateFlow, and understand the Compose lifecycle.</p>
+                </div>
+
+                <div class="learning-objectives">
+                    <h3>By the end of this chapter, you will:</h3>
+                    <ul>
+                        <li>Understand the declarative UI paradigm of Jetpack Compose</li>
+                        <li>Build simple Composable functions</li>
+                        <li>Manage UI state with ViewModel and StateFlow</li>
+                        <li>Use remember, mutableStateOf, and derived state</li>
+                        <li>Navigate between screens</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>What is Jetpack Compose?</h2>
+                    <p>Jetpack Compose is Android's modern declarative UI toolkit. Instead of manipulating views imperatively (findViewById, setText), you describe what the UI should look like based on the current state.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Old way (imperative)
+val textView = findViewById&lt;TextView&gt;(R.id.text)
+textView.text = "Hello"
+textView.setTextColor(Color.RED)
+
+// New way (declarative) — Jetpack Compose
+@Composable
+fun Greeting(name: String) {
+    Text(
+        text = "Hello, $name!",
+        color = Color.Red
+    )
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Key concept:</strong> In Compose, UI is a function of state. When state changes, Compose automatically recomposes (re-runs) the affected Composables. Think React, but for native Android.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Your First Composable</h2>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MyAppTheme {
+                Greeting(name = "Android")
+            }
+        }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello, $name!",
+        modifier = modifier.padding(16.dp)
+    )
+}</code></pre>
+                    </div>
+
+                    <h3>Layout Composables</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun ProfileCard() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Alex", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("Developer", fontSize = 16.sp, color = Color.Gray)
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            Button(onClick = { /* TODO */ }) {
+                Text("Follow")
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            OutlinedButton(onClick = { /* TODO */ }) {
+                Text("Message")
+            }
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Managing State</h2>
+                    <p>State in Compose can be local (remember) or shared (ViewModel + StateFlow).</p>
+
+                    <h3>Local State with remember</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun Counter() {
+    var count by remember { mutableIntStateOf(0) }
+
+    Column {
+        Text("Count: $count", fontSize = 20.sp)
+        Button(onClick = { count++ }) {
+            Text("Increment")
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <h3>Shared State with ViewModel</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class CounterViewModel : ViewModel() {
+    // Private mutable state
+    private val _count = MutableStateFlow(0)
+    // Public immutable state
+    val count: StateFlow&lt;Int&gt; = _count.asStateFlow()
+
+    fun increment() {
+        _count.value++
+    }
+}
+
+@Composable
+fun CounterScreen(viewModel: CounterViewModel = viewModel()) {
+    val count by viewModel.count.collectAsState()
+
+    Column {
+        Text("Count: $count", fontSize = 20.sp)
+        Button(onClick = { viewModel.increment() }) {
+            Text("Increment")
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>When to use what:</strong> Use <code>remember</code> for UI-only state (text field input, scroll position). Use <code>ViewModel + StateFlow</code> for business logic state that survives configuration changes (screen rotation) and is shared across Composables.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Side Effects</h2>
+                    <p>Composable functions should be side-effect free. For side effects, use effect APIs.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun UserProfile(userId: String) {
+    // Runs once when userId changes
+    LaunchedEffect(userId) {
+        viewModel.loadUser(userId)
+    }
+
+    // Runs on every successful recomposition
+    SideEffect {
+        println("Profile recomposed")
+    }
+
+    // Disposable — cleanup when leaving composition
+    DisposableEffect(Unit) {
+        val listener = object : SomeListener { /* ... */ }
+        registerListener(listener)
+        onDispose {
+            unregisterListener(listener)
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Lists in Compose</h2>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun UserList(users: List&lt;User&gt;) {
+    LazyColumn {
+        items(users, key = { it.id }) { user ->
+            UserRow(user)
+        }
+    }
+}
+
+@Composable
+fun UserRow(user: User) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(user.name, modifier = Modifier.weight(1f))
+        Text(user.email, color = Color.Gray)
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Navigation</h2>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
+            HomeScreen(onNavigate = { navController.navigate("detail/$it") })
+        }
+        composable("detail/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            DetailScreen(userId = userId)
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="exercise-box">
+                    <h4>Try It Yourself</h4>
+                    <p>Create a simple todo item Composable that shows a task text and a checkbox. When clicked, it should toggle a strikethrough on the text.</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun TodoItem(task: String) {
+    // Your code here:
+
+
+
+
+}</code></pre>
+                    </div>
+                    <div class="exercise-hint">
+                        <details>
+                            <summary>Stuck? Show hint</summary>
+                            <div class="exercise-hint-content">
+                                Use <code>var checked by remember { mutableStateOf(false) }</code>, a <code>Row</code> with a <code>Checkbox</code> and a <code>Text</code>, and apply <code>if (checked) TextDecoration.LineThrough else TextDecoration.None</code> to the text style.
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="concept-check">
+                    <h4>Concept Check</h4>
+                    <p>What is the purpose of <code>ViewModel</code> in Compose?</p>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'ViewModel does not replace Composables; it holds state that Composables observe.')">To replace Composable functions</div>
+                    <div class="check-option" onclick="checkAnswer(this, true, 'Correct! ViewModel survives configuration changes (like rotation) and provides a single source of truth for UI state.', '')">To hold and manage UI-related data that survives config changes</div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'ViewModel is not for styling; it holds data and business logic.')">To apply themes and styling to the UI</div>
+                    <div class="check-feedback"></div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="ch06-coroutines.html" class="nav-btn" id="prevLink">
+                        <span class="label">Previous</span>
+                        <span class="title">Coroutines</span>
+                    </a>
+                    <div></div>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>Kotlin Crash Course — Chapter 7 of 7. You made it!</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
