@@ -75,6 +75,47 @@ val message = greet("Alex")
 println(message)  // Hello, Alex!</code></pre>
                     </div>
 
+                    <div class="warning-box info-box">
+                        <strong>Important:</strong> Function parameters are implicitly <code>val</code> — you cannot reassign them. This trips up JavaScript and Python developers who are used to mutating parameters.
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">fun doubleIt(n: Int): Int {
+    // n = n * 2   // ❌ ERROR: Val cannot be reassigned
+    return n * 2   // ✅ Create a new value instead
+}</code></pre>
+                    </div>
+
+                    <div class="comparison-box">
+                        <div class="comparison-header">
+                            <h4>📊 Compare with JS / Python</h4>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="comparison-content">
+                            <div class="comparison-grid">
+                                <div class="comparison-col">
+                                    <span class="lang-tag js">JavaScript</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-javascript">function doubleIt(n) {
+    n = n * 2;   // Allowed (but doesn't affect caller)
+    return n;
+}</code></pre>
+                                    </div>
+                                </div>
+                                <div class="comparison-col">
+                                    <span class="lang-tag py">Python</span>
+                                    <div class="code-block-wrapper">
+                                        <pre><code class="language-python">def double_it(n):
+    n = n * 2    # Allowed (rebinds local name)
+    return n</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Kotlin prevents parameter reassignment at compile time. This avoids bugs where you accidentally mutate a parameter thinking it affects the caller. It's also a form of defensive programming — parameters are inputs, not local variables.</p>
+                        </div>
+                    </div>
+
                     <div class="comparison-box">
                         <div class="comparison-header">
                             <h4>📊 Compare with JS / Python</h4>
@@ -225,6 +266,33 @@ val max = operateOn(3, 4) { x, y ->
 }</code></pre>
                     </div>
 
+                    <h3>More Lambda Patterns</h3>
+                    <p>Kotlin lambdas support destructuring, function references, and anonymous functions for cases where you need explicit return types.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Destructuring in lambdas — iterate over maps cleanly
+val headers = mapOf("Content-Type" to "application/json", "Auth" to "Bearer token")
+headers.forEach { (key, value) ->
+    println("$key: $value")
+}
+
+// Anonymous function — useful when you need explicit return type
+val numbers = listOf(1, 2, 3, 4, 5)
+val odds = numbers.filter(fun(n: Int): Boolean {
+    return n % 2 != 0
+})
+
+// Function references — pass existing functions instead of lambdas
+fun isOdd(n: Int) = n % 2 != 0
+val oddsRef = numbers.filter(::isOdd)           // reference to top-level function
+val toIntRef = listOf("1", "2", "3").map(String::toInt)  // reference to member function</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>When to use each:</strong> Use lambdas <code>{ }</code> for short inline functions. Use anonymous functions <code>fun() { }</code> when you need multiple return points or explicit return types. Use function references <code>::name</code> when you already have a function that does exactly what you need — it's cleaner and more readable than wrapping it in a lambda.
+                    </div>
+
                     <div class="comparison-box">
                         <div class="comparison-header">
                             <h4>📊 Compare with JS / Python</h4>
@@ -277,6 +345,173 @@ sumAll(1, 2, 3, 4, 5)     // 15
 // Spread operator to pass an array
 val nums = intArrayOf(1, 2, 3)
 sumAll(*nums)             // 6</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Local Functions</h2>
+                    <p>Kotlin lets you declare functions inside other functions. They have access to variables in the outer scope (closure) and are great for encapsulating helper logic.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">fun validateUser(user: User): Boolean {
+    // Local helper function — only visible inside validateUser
+    fun isEmailValid(email: String): Boolean {
+        return email.contains("@") && email.contains(".")
+    }
+
+    fun isAgeValid(age: Int): Boolean {
+        return age in 13..120
+    }
+
+    return isEmailValid(user.email) && isAgeValid(user.age)
+}</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Closure: local function captures outer variable
+fun fibonacci(n: Int): List<Int> {
+    val result = mutableListOf<Int>()
+
+    fun compute(current: Int): Int {
+        if (current <= 1) return current
+        // Recursively calls itself — a helper that needs access to `result`
+        return compute(current - 1) + compute(current - 2)
+    }
+
+    for (i in 0 until n) {
+        result.add(compute(i))
+    }
+    return result
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Real-world use case:</strong> Local functions keep helper logic private to the function that needs it. In parsing (JSON, XML), you'll often have small recursive helpers that only make sense inside the main parse function. In algorithms, local functions can capture state from the outer scope without polluting the class or file namespace.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Generic Functions</h2>
+                    <p>Generic functions work with any type while maintaining type safety. They're essential for writing reusable utilities.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Generic function with vararg — works with any type T
+fun <T> asList(vararg ts: T): List<T> {
+    val result = ArrayList<T>()
+    for (t in ts) result.add(t)
+    return result
+}
+
+val stringList = asList("a", "b", "c")   // List&lt;String&gt;
+val intList = asList(1, 2, 3)            // List&lt;Int&gt;
+val mixed = asList(1, "two", 3.0)        // List&lt;Comparable&lt;*&gt;&gt;</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Type constraints — T must be Comparable
+fun <T : Comparable<T>> sort(list: List<T>): List<T> {
+    return list.sorted()
+}
+
+// Multiple constraints using where
+fun <T> copyWhenGreater(list: List<T>, threshold: T): List<String>
+    where T : CharSequence,
+          T : Comparable<T> {
+    return list.filter { it > threshold }.map { it.toString() }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Real-world use case:</strong> Generic functions power Kotlin's standard library — <code>listOf()</code>, <code>mapOf()</code>, and <code>filter()</code> are all generic. When building your own utilities (network response wrappers, caching layers, or repository patterns), generics let you write one implementation that works for <code>User</code>, <code>Order</code>, or any other type safely.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Tail Recursion</h2>
+                    <p>Deep recursion can cause a <code>StackOverflowError</code>. Kotlin's <code>tailrec</code> modifier optimizes recursive calls into loops, eliminating stack growth.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Without tailrec: each call adds a stack frame
+fun factorial(n: Int): Int {
+    return if (n <= 1) 1 else n * factorial(n - 1)
+}
+
+// With tailrec: compiler converts recursion to a loop
+// The recursive call must be the LAST operation (tail position)
+tailrec fun factorial(n: Int, acc: Int = 1): Int {
+    return if (n <= 1) acc else factorial(n - 1, n * acc)
+}</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Real-world: processing nested data structures safely
+tailrec fun flattenPaths(current: String, remaining: List<String>, acc: List<String> = emptyList()): List<String> {
+    return when {
+        remaining.isEmpty() -> acc
+        else -> {
+            val next = current + "/" + remaining.first()
+            flattenPaths(next, remaining.drop(1), acc + next)
+        }
+    }
+}
+
+// This won't crash even with thousands of nested items
+val paths = flattenPaths("/home", listOf("user", "docs", "projects", "kotlin"))</code></pre>
+                    </div>
+
+                    <div class="warning-box info-box">
+                        <strong>Requirements:</strong> The recursive call must be the <em>very last</em> operation in the function. If you do anything after the recursive call (like <code>n * factorial(n - 1)</code>), the compiler can't optimize it and will show a warning.
+                    </div>
+
+                    <div class="info-box">
+                        <strong>When to use:</strong> Use <code>tailrec</code> for algorithms that naturally express as recursion but may process deep data — tree traversal, path resolution, state machines, and mathematical sequences. In functional programming styles, tail recursion replaces loops while keeping the code declarative.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Infix Functions</h2>
+                    <p>Infix functions let you call a function without dots or parentheses, making code read more like natural language or mathematical notation.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Define an infix extension function
+infix fun Int.times(str: String) = str.repeat(this)
+
+// Call it like an operator
+val result = 2 times "Bye "    // "Bye Bye "
+
+// Another example: range check
+infix fun Int.isMultipleOf(n: Int) = this % n == 0
+
+val check = 10 isMultipleOf 5   // true</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Real-world: building DSL-like APIs for tests or configuration
+infix fun String.shouldBe(expected: String) {
+    if (this != expected) throw AssertionError("Expected '$expected' but was '$this'")
+}
+
+"Hello" shouldBe "Hello"   // reads like English!
+
+// Kotlin standard library uses infix extensively
+val range = 1..10           // .. is an infix function
+val map = mapOf("a" to 1)   // to is an infix function creating a Pair</code></pre>
+                    </div>
+
+                    <div class="warning-box info-box">
+                        <strong>Requirements:</strong> Infix functions must be member functions or extension functions. They must have exactly one parameter. The parameter cannot accept a variable number of arguments and cannot have a default value.
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>When to use:</strong> Infix functions shine in DSLs (domain-specific languages) and testing frameworks. Kotlin's <code>to</code> for pairs and <code>until</code> for ranges are infix. Use them when a function represents a natural relationship between two values — but don't overuse them, as they can hurt readability if the operation isn't intuitive.
                     </div>
                 </div>
 

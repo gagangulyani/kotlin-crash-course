@@ -131,6 +131,24 @@ name: str = "Alex"</code></pre>
                     <div class="info-box">
                         <strong>Note:</strong> Kotlin has no "primitive" types at the language level. <code>Int</code>, <code>Double</code>, etc. are all objects. The compiler optimizes them to JVM primitives when possible, but you don't need to think about it.
                     </div>
+
+                    <h3>Number Literals</h3>
+                    <p>Kotlin supports multiple number bases and lets you use underscores for readability. This is especially useful for bitmasks, color values, and large constants.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val binary = 0b00001011    // 11 in decimal — useful for flags/bitmasks
+val hex = 0x0F             // 15 in decimal — common for colors (0xFF5733)
+val large = 1_000_000      // One million — underscores for readability
+
+// Real-world: Android colors
+val backgroundColor = 0xFF121212  // dark theme background
+val permissionFlags = 0b00001101    // bitwise permission flags</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Why this matters:</strong> In Android development, colors are hex (<code>0xFF5733</code>). In networking and file systems, binary flags are common. Underscores make large numbers readable without changing the value — <code>1_000_000</code> is the same as <code>1000000</code>.
+                    </div>
                 </div>
 
                 <div class="section">
@@ -149,9 +167,19 @@ val greeting = "Hello, $name!"           // "Hello, Alex!"
 // Expression in braces
 val nextYear = "You'll be ${age + 1}"    // "You'll be 26"
 
+// Calling functions in templates
+val shout = "HELLO, ${name.uppercase()}!"  // "HELLO, ALEX!"
+
+// Escaping $ when you need a literal dollar sign
+val price = "The price is \$50"          // "The price is $50"
+
 // Raw strings (no escaping needed)
 val path = "C:\\Users\\Alex"             // regular string — need escaping
 val rawPath = """C:\Users\Alex"""       // raw string — no escaping!</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Real-world use case:</strong> Building log messages or API URLs: <code>"https://api.example.com/users/${userId.trim()}"</code>. Escaping <code>$</code> is essential when displaying prices or currency: <code>"Total: \$${totalAmount}"</code>.
                     </div>
 
                     <h3>Multi-line Strings</h3>
@@ -213,6 +241,89 @@ val num = s.toInt()      // ✅ 42
 
                     <div class="warning-box info-box">
                         <strong>Watch out:</strong> Unlike JavaScript, <code>"5" + 3</code> is not <code>"53"</code> in Kotlin — it's a compile error. Kotlin won't silently convert types for you.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Late Initialization</h2>
+                    <p>Sometimes you need a non-nullable variable that can't be initialized immediately — for example, in dependency injection or test setup where the value is assigned after object creation.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class UserRepository {
+    lateinit var database: Database  // Will be assigned later
+
+    fun setup(db: Database) {
+        database = db
+    }
+
+    fun fetchUser(id: String): User {
+        // Must check initialization before use
+        if (::database.isInitialized) {
+            return database.query(id)
+        } else {
+            throw IllegalStateException("Database not initialized")
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Common in Android — views are initialized after layout inflation
+class MainActivity {
+    lateinit var submitButton: Button
+
+    fun onCreate() {
+        submitButton = findViewById(R.id.submit_button)
+        submitButton.setOnClickListener { /* ... */ }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box info-box">
+                        <strong>Important rules:</strong> <code>lateinit</code> only works with <code>var</code> (not <code>val</code>) and only for non-primitive, non-nullable types. If you access it before initialization, you get an <code>UninitializedPropertyAccessException</code>. Always check <code>::name.isInitialized</code> if unsure.
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>When to use:</strong> Use <code>lateinit</code> for dependency injection (Spring, Koin), test setup (JUnit <code>@Before</code>), and Android view binding where initialization happens in a lifecycle method. If you can use a nullable type instead, prefer that for safety.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Type Aliases</h2>
+                    <p>Type aliases give a new name to an existing type. They don't create new types — just more readable names for complex or frequently used type signatures.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Simple aliases for domain concepts
+typealias UserId = String
+typealias Email = String
+
+// Aliases for complex collection types
+typealias Users = List<User>
+typealias UserMap = Map<UserId, User>
+
+// Usage — much clearer intent
+fun fetchUsers(): Users { /* ... */ }
+fun findUser(id: UserId): User? { /* ... */ }</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Aliases for function types — great for callbacks
+typealias OnClickListener = (View) -> Unit
+typealias ApiCallback<T> = (Result<T>) -> Unit
+
+class Button {
+    fun setOnClickListener(listener: OnClickListener) { /* ... */ }
+}
+
+fun fetchData(callback: ApiCallback<String>) { /* ... */ }</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Why this matters:</strong> Type aliases make your code self-documenting. <code>fun process(users: Users)</code> is clearer than <code>fun process(users: List&lt;User&gt;)</code>. They're especially valuable for nested generics and lambda types in Android callbacks.
                     </div>
                 </div>
 

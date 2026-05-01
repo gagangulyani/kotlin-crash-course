@@ -137,6 +137,10 @@ user = User("Alex", 25)</code></pre>
                             <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Constructor params prefixed with <code>val</code>/<code>var</code> automatically become properties. No <code>this.name = name</code> boilerplate.</p>
                         </div>
                     </div>
+
+                    <div class="tip-box">
+                        <strong>Practical use:</strong> Use regular classes for services and stateful objects. Use primary constructor properties for configuration objects, DTOs, and anything that carries data without behavior.
+                    </div>
                 </div>
 
                 <div class="section">
@@ -167,6 +171,10 @@ println("$name, $email, $age")</code></pre>
 
                     <div class="info-box success-box">
                         <strong>Immutable data pattern:</strong> Always use <code>val</code> in data classes. When you need to "change" something, use <code>.copy()</code>. This makes your code predictable and thread-safe.
+                    </div>
+
+                    <div class="info-box warning-box">
+                        <strong>Warning:</strong> Properties declared in the class <strong>body</strong> (not the primary constructor) are <strong>excluded</strong> from generated <code>equals()</code>, <code>hashCode()</code>, <code>toString()</code>, and <code>copy()</code>. Only primary constructor parameters are used.
                     </div>
 
                     <div class="comparison-box">
@@ -209,6 +217,163 @@ user = User("Alex", "alex@example.com")</code></pre>
                             </div>
                             <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Data classes are built-in and more powerful than Python's <code>@dataclass</code>. The <code>copy()</code> function and destructuring are especially useful.</p>
                         </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Enum Classes</h2>
+                    <p>Enum classes represent a fixed set of constants. They're ideal for state machines, configuration options, and type-safe categorization.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">enum class Priority { LOW, MEDIUM, HIGH }
+
+enum class Status(val code: Int) {
+    ACTIVE(1),
+    INACTIVE(0)
+}
+
+// Every enum has built-in properties
+println(Priority.LOW.name)      // "LOW"
+println(Priority.LOW.ordinal)   // 0
+
+// Iterating and finding values
+for (priority in Priority.values()) {
+    println(priority)
+}
+
+val active = Status.valueOf("ACTIVE")  // Status.ACTIVE
+
+// Generic helper for any enum type
+val allStatuses = enumValues&lt;Status&gt;()</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Use enums for:</strong> API status codes, UI themes, sorting modes, payment states, and anywhere you need a closed set of named constants with compile-time safety.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Nested and Inner Classes</h2>
+                    <p>Kotlin lets you define classes inside other classes. A <strong>nested class</strong> is like a static member — it has no reference to the outer instance. An <strong>inner class</strong> holds a reference to its outer instance.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class Outer {
+    val name = "Outer"
+
+    // Nested class — no reference to Outer
+    class Nested {
+        fun greet() = "Hello from Nested"
+    }
+
+    // Inner class — holds reference to Outer
+    inner class Inner {
+        fun greet() = "Hello from ${this@Outer.name}"
+    }
+}
+
+val nested = Outer.Nested()   // No Outer instance needed
+val outer = Outer()
+val inner = outer.Inner()     // Requires Outer instance</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Common use cases:</strong> Nested classes for self-contained helpers (e.g., <code>ViewHolder</code> in Android adapters). Inner classes for builders that need to access outer properties during construction.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Delegation</h2>
+                    <p>The <code>by</code> keyword lets you delegate interface implementation to another object. This is Kotlin's native support for the decorator pattern — no manual forwarding required.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">interface UserRepository {
+    fun findUser(id: String): User
+}
+
+class RealRepository : UserRepository {
+    override fun findUser(id: String): User {
+        // query database
+        return User(id, "Alex")
+    }
+}
+
+// Delegates all UserRepository calls to cachedRepository
+class CachedRepository(
+    private val cachedRepository: UserRepository
+) : UserRepository by cachedRepository
+
+// You can override specific methods while delegating the rest
+class LoggingRepository(
+    private val delegate: UserRepository
+) : UserRepository by delegate {
+    override fun findUser(id: String): User {
+        println("Finding user $id")
+        return delegate.findUser(id)
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Use delegation for:</strong> Caching layers, logging wrappers, metrics collection, and transaction management — anywhere you want to add cross-cutting concerns without inheritance.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Lateinit Properties</h2>
+                    <p>Use <code>lateinit</code> when you must initialize a property after construction — common in dependency injection and Android view binding.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class MainActivity {
+    lateinit var viewModel: MainViewModel
+    lateinit var username: String
+
+    fun onCreate() {
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        username = "Alex"
+
+        // Check initialization (useful for testing)
+        if (::username.isInitialized) {
+            println(username)
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="info-box warning-box">
+                        <strong>lateinit rules:</strong> Must be <code>var</code> (not <code>val</code>), non-nullable, and non-primitive (no <code>Int</code>, <code>Boolean</code>, etc.). Accessing before initialization throws <code>UninitializedPropertyAccessException</code>.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Properties with Custom Getters/Setters</h2>
+                    <p>Properties aren't just fields — they can have custom accessors. The <code>field</code> identifier refers to the backing field.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">class User {
+    var name: String = ""
+        get() = field.uppercase()           // transform on read
+        set(value) {
+            field = value.trim()             // validate/clean on write
+        }
+
+    // Computed property with no backing field
+    val displayName: String
+        get() = "User: $name"
+}
+
+val user = User()
+user.name = "  alex  "
+println(user.name)          // "ALEX"
+println(user.displayName)   // "User: ALEX"</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Use custom accessors for:</strong> Input validation, formatting, lazy computation, derived state, and encapsulating side effects like logging when a property changes.
                     </div>
                 </div>
 
@@ -270,6 +435,10 @@ class Square(side: Double) : Rectangle(side, side) {
                     <div class="info-box">
                         <strong>Design philosophy:</strong> Kotlin defaults to <code>final</code> because inheritance is powerful but dangerous. Only open classes/methods when you explicitly design for extension. Prefer composition over inheritance.
                     </div>
+
+                    <div class="tip-box">
+                        <strong>When to use what:</strong> Use <strong>interfaces</strong> for behavior contracts that cross multiple unrelated types (e.g., <code>Serializable</code>, <code>Comparable</code>). Use <strong>abstract classes</strong> for shared base implementation with common state. Use <strong>open classes</strong> only when you truly intend for others to subclass.
+                    </div>
                 </div>
 
                 <div class="section">
@@ -330,6 +499,10 @@ def add_exclamation(s: str) -> str:
                             <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Extensions are statically resolved, type-safe, and IDE-discoverable. No runtime monkey-patching. They feel like real methods but don't modify the original class.</p>
                         </div>
                     </div>
+
+                    <div class="tip-box">
+                        <strong>Real-world extensions:</strong> <code>String.isEmail()</code> for validation, <code>View.visible()</code> / <code>View.gone()</code> for Android UI, <code>Int.dpToPx()</code> for density conversion, and <code>List&lt;T&gt;.secondOrNull()</code> for missing collection helpers.
+                    </div>
                 </div>
 
                 <div class="section">
@@ -353,6 +526,10 @@ class User(val name: String) {
 
 val guest = User.createGuest()
 println(User.MAX_NAME_LENGTH)</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Common patterns:</strong> Use <code>object</code> for event buses, shared preferences helpers, and database instances. Use <code>companion object</code> for factory methods (<code>fromJson</code>, <code>empty</code>), parser functions, and constants that belong to the class namespace.
                     </div>
                 </div>
 

@@ -101,6 +101,10 @@ val hasApple = "Apple" in fruits        // true
 val index = fruits.indexOf("Banana")    // 1</code></pre>
                     </div>
 
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> Lists are ideal for ordered data like a playlist, a timeline of messages, or search results from an API where duplicates are allowed and order matters.
+                    </div>
+
                     <h3>Sets</h3>
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -113,6 +117,10 @@ val b = setOf(2, 3, 4)
 val union = a union b               // {1, 2, 3, 4}
 val intersect = a intersect b       // {2, 3}
 val diff = a subtract b             // {1}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> Use sets to track unique tags on a blog post, check for overlapping interests between users, or quickly test membership (e.g., "is this user ID in the banned set?").
                     </div>
 
                     <h3>Maps</h3>
@@ -132,6 +140,10 @@ for ((name, score) in scores) {
 
 // Destructuring
 val (key, value) = scores.entries.first()</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> Maps power lookup tables such as user settings by key, caching API responses by URL, or converting country codes to display names with O(1) lookup time.
                     </div>
                 </div>
 
@@ -161,6 +173,10 @@ val result = numbers
 // [50, 40, 30]</code></pre>
                     </div>
 
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> In an e-commerce app, chain <code>products.filter { it.inStock }.map { it.displayPrice }.sorted()</code> to show available items with formatted prices in ascending order.
+                    </div>
+
                     <h3>reduce, fold</h3>
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -178,21 +194,8 @@ val byFirstLetter = words.groupBy { it.first() }
 // {a=[apple, ant], b=[banana, blue], c=[cherry]}</code></pre>
                     </div>
 
-                    <h3>More Useful Operations</h3>
-                    <div class="code-block-wrapper">
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code class="language-kotlin">val numbers = listOf(3, 1, 4, 1, 5, 9, 2, 6)
-
-numbers.any { it > 5 }          // true — at least one matches
-numbers.all { it > 0 }          // true — all match
-numbers.none { it < 0 }         // true — none match
-numbers.find { it > 5 }         // 9 — first match
-numbers.take(3)                 // [3, 1, 4] — first 3
-numbers.drop(3)                 // [1, 5, 9, 2, 6] — skip first 3
-numbers.distinct()              // [3, 1, 4, 5, 9, 2, 6]
-numbers.sorted()                // [1, 1, 2, 3, 4, 5, 6, 9]
-numbers.sortedByDescending { it }  // [9, 6, 5, 4, 3, 2, 1, 1]
-numbers.partition { it > 4 }    // Pair([5, 9, 6], [3, 1, 4, 1, 2])</code></pre>
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> Use <code>fold</code> to compute a shopping cart total with an initial discount, or <code>reduce</code> to find the highest-scoring player from a list of game results.
                     </div>
 
                     <div class="comparison-box">
@@ -224,6 +227,212 @@ sum_val = reduce(lambda a, b: a + b, nums, 0)</code></pre>
                             </div>
                             <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Very similar to JS array methods! But Kotlin operations work on immutable collections and are type-safe. No list comprehensions like Python, but chaining is more readable than nested comprehensions.</p>
                         </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Chunked and Windowed</h2>
+                    <p>Break a collection into sublists for batch processing or sliding window analysis. These are invaluable for paginating UI lists or processing time-series data.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val numbers = listOf(1, 2, 3, 4, 5, 6, 7, 8)
+
+// chunked: groups into sublists of given size
+val pairs = numbers.chunked(2)
+// [[1, 2], [3, 4], [5, 6], [7, 8]]
+
+// windowed: sliding window of given size
+val windows = numbers.windowed(3)
+// [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8]]
+
+// windowed with step: skip elements between windows
+val stepped = numbers.windowed(3, step = 2)
+// [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+
+// With transform
+val sums = numbers.windowed(3) { it.sum() }
+// [6, 9, 12, 15, 18, 21]</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use cases:</strong> Use <code>chunked</code> to batch database writes (e.g., 100 rows at a time) or create grid layouts for a photo gallery. Use <code>windowed</code> for rolling averages in analytics, sliding text tokens in NLP, or detecting patterns in sensor data.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Zip and Unzip</h2>
+                    <p>Combine two parallel collections element by element, or split a list of pairs back into separate lists.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val names = listOf("Alice", "Bob", "Charlie")
+val ages = listOf(25, 30, 35)
+
+// zip: pairs elements from two lists
+val pairs = names.zip(ages)
+// [(Alice, 25), (Bob, 30), (Charlie, 35)]
+
+// zip with transform
+val descriptions = names.zip(ages) { name, age ->
+    "$name is $age years old"
+}
+// ["Alice is 25 years old", "Bob is 30 years old", "Charlie is 35 years old"]
+
+// unzip: split list of pairs back into two lists
+val (unzippedNames, unzippedAges) = pairs.unzip()</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> Reading a CSV file often gives you separate lists for each column. <code>zip</code> lets you combine them into records. Unzip a list of coordinate pairs into separate latitude and longitude lists for charting libraries.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Associate and GroupBy</h2>
+                    <p>Transform collections into maps for fast lookups, categorization, and counting.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">data class Product(val id: Int, val name: String, val category: String)
+
+val products = listOf(
+    Product(1, "Laptop", "Electronics"),
+    Product(2, "Shirt", "Clothing"),
+    Product(3, "Phone", "Electronics")
+)
+
+// associateBy: map by unique key
+val byId = products.associateBy { it.id }
+// {1=Product(1, Laptop, Electronics), ...}
+
+// associate: custom key-value pairs
+val nameToCategory = products.associate { it.name to it.category }
+// {Laptop=Electronics, Shirt=Clothing, Phone=Electronics}
+
+// associateWith: use elements as keys, compute values
+val nameLengths = products.associateWith { it.name.length }
+// {Product(1, Laptop, Electronics)=6, ...}
+
+// groupBy: grouping into Map&lt;K, List&lt;T&gt;&gt;
+val byCategory = products.groupBy { it.category }
+// {Electronics=[Product(1, ...), Product(3, ...)], Clothing=[Product(2, ...)]}
+
+// groupingBy + eachCount: counting occurrences
+val words = listOf("apple", "banana", "apple", "cherry", "banana", "apple")
+val counts = words.groupingBy { it }.eachCount()
+// {apple=3, banana=2, cherry=1}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use cases:</strong> Use <code>associateBy</code> to build lookup tables from database rows for O(1) access by ID. Use <code>groupBy</code> to organize messages by sender in a chat app, or to build histograms from log entries.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Flatten and FlatMap</h2>
+                    <p>Work with nested collections by flattening them or mapping and flattening in one step.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val listOfLists = listOf(
+    listOf(1, 2, 3),
+    listOf(4, 5),
+    listOf(6, 7, 8)
+)
+
+// flatten: collapse one level of nesting
+val flat = listOfLists.flatten()
+// [1, 2, 3, 4, 5, 6, 7, 8]
+
+// flatMap: map each element to a list, then flatten
+data class Department(val name: String, val employees: List&lt;String&gt;)
+
+val departments = listOf(
+    Department("Engineering", listOf("Alice", "Bob")),
+    Department("Design", listOf("Charlie", "Dana"))
+)
+
+val allEmployees = departments.flatMap { it.employees }
+// ["Alice", "Bob", "Charlie", "Dana"]
+
+// Equivalent to:
+// departments.map { it.employees }.flatten()</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> A company has departments with employee lists; use <code>flatMap</code> to get a single list of all employees for a company-wide email. In a blog app, <code>flatMap</code> can gather all comments from a list of posts.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>ArrayDeque</h2>
+                    <p><code>ArrayDeque</code> is a double-ended queue that supports O(1) operations at both ends. It is the recommended Kotlin type for both stack (LIFO) and queue (FIFO) behavior.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val deque = ArrayDeque&lt;String&gt;()
+
+// Queue (FIFO)
+deque.addLast("Alice")
+deque.addLast("Bob")
+val first = deque.removeFirst()  // "Alice"
+
+// Stack (LIFO)
+deque.addLast("Task 1")
+deque.addLast("Task 2")
+val last = deque.removeLast()    // "Task 2"
+
+// Peeking without removing
+val peekFirst = deque.firstOrNull()
+val peekLast = deque.lastOrNull()
+
+// Initialize from a list
+val history = ArrayDeque(listOf("Page 1", "Page 2"))
+history.addLast("Page 3")
+if (history.size &gt; 10) history.removeFirst()  // keep last 10 pages</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use cases:</strong> Use <code>ArrayDeque</code> as a navigation history stack in an Android WebView, an undo buffer in a text editor, or a job queue for background workers. Prefer it over <code>LinkedList</code> — it is faster and uses less memory.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Collection Builders</h2>
+                    <p>When you need to build a collection with loops, conditions, or complex logic, use builder functions. They are more efficient than creating a mutable list and then wrapping it.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// buildList: create a List with imperative logic
+val result = buildList {
+    add("Start")
+    addAll(listOf("A", "B", "C"))
+    if (System.currentTimeMillis() % 2 == 0L) {
+        add("Even")
+    }
+    repeat(3) { add("Item $it") }
+}
+
+// buildMap: create a Map with conditions
+val config = buildMap&lt;String, Any&gt; {
+    put("debug", true)
+    put("version", 42)
+    if (BuildConfig.FLAVOR == "dev") {
+        put("mockApi", true)
+    }
+}
+
+// buildSet: create a Set, duplicates ignored automatically
+val uniqueTags = buildSet {
+    add("kotlin")
+    addAll(postTags)
+    add("featured")
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> Collection builders shine when the final collection depends on runtime conditions. For example, building an API request body where some fields are optional, or constructing a UI settings map that varies by user permissions.
                     </div>
                 </div>
 

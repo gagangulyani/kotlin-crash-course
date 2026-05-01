@@ -78,11 +78,19 @@ suspend fun fetchUserGood(userId: String) {
                     <div class="info-box">
                         <strong>Key insight:</strong> Coroutines are <strong>lightweight threads</strong> managed by Kotlin's runtime, not the operating system. You can launch millions of them on a single thread. They suspend instead of block — freeing the underlying thread to do other work.
                     </div>
+
+                    <div class="tip-box">
+                        <strong>Real-world impact:</strong> A backend service handling 10,000 concurrent WebSocket connections would need gigabytes of RAM with threads. With coroutines, it fits in a single JVM with tens of megabytes.
+                    </div>
                 </div>
 
                 <div class="section">
                     <h2>Your First Coroutine</h2>
                     <p>To launch a coroutine, you need a <strong>CoroutineScope</strong>. For learning, use <code>runBlocking</code>. In real apps, use structured scopes tied to lifecycle (ViewModelScope, LifecycleScope).</p>
+
+                    <div class="info-box warning-box">
+                        <strong>GlobalScope is discouraged in production:</strong> <code>GlobalScope</code> lives for the entire application lifetime and is not bound to any lifecycle. Prefer structured scopes like <code>lifecycleScope</code>, <code>viewModelScope</code>, or create your own <code>CoroutineScope</code> tied to a specific component.
+                    </div>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -158,6 +166,144 @@ asyncio.run(main())</code></pre>
                 </div>
 
                 <div class="section">
+                    <h2>Dispatchers</h2>
+                    <p>Dispatchers determine which thread or thread pool a coroutine runs on. Choosing the right dispatcher prevents blocking the UI thread and keeps your app responsive.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Dispatchers.Main    — Android/UI thread (updates views)
+// Dispatchers.IO      — Network and disk I/O (thread pool)
+// Dispatchers.Default — CPU-intensive work (thread pool)
+// Dispatchers.Unconfined — Starts in caller context, jumps around
+
+suspend fun loadData() {
+    withContext(Dispatchers.IO) {
+        val data = fetchFromNetwork()   // Safe to block with IO
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Rule of thumb:</strong> UI updates on <code>Main</code>, network/files on <code>IO</code>, algorithms/JSON parsing on <code>Default</code>. Never call <code>Dispatchers.IO</code> functions directly from the UI thread without <code>withContext</code>.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Switching Contexts with withContext</h2>
+                    <p><code>withContext</code> lets you move a coroutine to a different dispatcher, do work, and return the result — all without callbacks. Execution is sequential but happens on different threads.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">suspend fun updateDashboard() {
+    val data = withContext(Dispatchers.IO) {
+        fetchFromNetwork()          // runs on IO thread pool
+    }
+
+    val processed = withContext(Dispatchers.Default) {
+        parseAndTransform(data)     // CPU work on Default pool
+    }
+
+    withContext(Dispatchers.Main) {
+        displayResult(processed)    // back to UI thread
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Use case:</strong> Fetch JSON from an API on <code>IO</code>, parse it on <code>Default</code>, then render it on <code>Main</code>. Each step is readable and sequential, yet runs on the optimal thread.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>SupervisorScope</h2>
+                    <p>In a regular <code>coroutineScope</code>, if one child fails, all siblings are cancelled. <code>supervisorScope</code> isolates failures so that one crashing child doesn't bring down the others.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">supervisorScope {
+    val job1 = launch {
+        mightFail()   // throws exception
+    }
+
+    val job2 = launch {
+        alwaysWorks() // continues running even if job1 fails
+    }
+
+    // Optionally handle exceptions per child
+    job1.invokeOnCompletion { exception ->
+        exception?.let { println("job1 failed: $it") }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Use case:</strong> Independent work items in a batch job. If one upload fails, the others should continue. Also used in Android <code>SupervisorJob</code> to keep a ViewModel alive when one use case crashes.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Async Exception Handling</h2>
+                    <p>Exceptions in <code>async</code> are deferred until you call <code>await()</code>. Handle them with <code>try/catch</code> or a <code>CoroutineExceptionHandler</code> for uncaught exceptions.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Exception is deferred until await()
+val deferred = async {
+    fetchDataThatMightFail()
+}
+
+try {
+    val result = deferred.await()
+} catch (e: Exception) {
+    println("Handled: $e")
+}
+
+// Global uncaught exception handler
+val handler = CoroutineExceptionHandler { _, exception ->
+    println("Uncaught: $exception")
+}
+
+val scope = CoroutineScope(Dispatchers.Main + handler)
+scope.launch {
+    throw RuntimeException("Oops")
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Rule of thumb:</strong> Wrap <code>await()</code> in <code>try/catch</code> when you expect failures. Use <code>CoroutineExceptionHandler</code> as a safety net for unexpected crashes in top-level scopes.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Channels</h2>
+                    <p>Channels provide a way for coroutines to communicate with each other — like Go channels or Python queues. They're perfect for producer-consumer patterns.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">import kotlinx.coroutines.channels.Channel
+
+val channel = Channel&lt;Int&gt;()
+
+// Producer
+launch {
+    for (x in 1..5) channel.send(x * x)
+    channel.close()
+}
+
+// Consumer
+launch {
+    for (value in channel) {
+        println(value)   // 1, 4, 9, 16, 25
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Use case:</strong> Background workers sending progress updates to the UI, parallel pipelines where one coroutine produces data and another transforms it, and backpressure-safe queues between modules.
+                    </div>
+                </div>
+
+                <div class="section">
                     <h2>Suspend Functions</h2>
                     <p>A <code>suspend</code> function can pause execution without blocking the thread. It can only be called from another suspend function or a coroutine.</p>
 
@@ -197,6 +343,10 @@ suspend fun loadDashboardFast(userId: String) {
                     <div class="tip-box">
                         <strong>Rule:</strong> Suspend functions look synchronous but execute asynchronously. Sequential by default, concurrent when you explicitly use async. This is the opposite of JS where everything concurrent by default.
                     </div>
+
+                    <div class="tip-box">
+                        <strong>Practical pattern:</strong> In an Android ViewModel, use sequential suspend calls for dependent operations (fetch user → fetch orders). Use <code>async</code> only when requests are independent (fetch profile + fetch notifications simultaneously).
+                    </div>
                 </div>
 
                 <div class="section">
@@ -222,6 +372,10 @@ launch {
         doSomeWork()
     }
 }</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Use case:</strong> Cancel a network request when the user leaves a screen. In Android, <code>viewModelScope</code> automatically cancels all children when the ViewModel is cleared — preventing leaks and wasted bandwidth.
                     </div>
                 </div>
 
@@ -256,6 +410,10 @@ userUpdates()
 
                     <div class="info-box">
                         <strong>Flow vs LiveData:</strong> In modern Android, Flow replaces LiveData for reactive data. Flow is lifecycle-aware when collected with <code>repeatOnLifecycle</code>, works with any coroutine scope, and supports backpressure and complex transformations.
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Real-world Flow:</strong> Expose database queries as <code>Flow</code> to automatically emit new values when data changes. Combine multiple flows for form validation (e.g., <code>email.combine(password) { ... }</code>). Use <code>StateFlow</code> for UI state that survives configuration changes.
                     </div>
                 </div>
 

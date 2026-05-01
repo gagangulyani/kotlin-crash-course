@@ -128,6 +128,10 @@ val city: String? = person?.address?.city
 // Without safe calls, this would be:
 // val city = if (person != null && person.address != null) person.address.city else null</code></pre>
                     </div>
+
+                    <div class="tip-box">
+                        <strong>Practical use case:</strong> Navigating nested JSON models from an API — <code>user?.profile?.avatarUrl?.let { loadImage(it) }</code> safely handles every missing level in a single chain.
+                    </div>
                 </div>
 
                 <div class="section">
@@ -149,6 +153,10 @@ val critical = name ?: throw IllegalArgumentException("Name required!")
 
 // Equivalent to:
 // val displayName = if (name != null) name else "Unknown"</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use cases:</strong> Provide default configuration values (<code>timeout ?: 5000</code>), return early error messages (<code>username ?: return "Username required"</code>), or supply fallback images when a URL is missing in a news feed app.
                     </div>
 
                     <div class="comparison-box">
@@ -216,6 +224,61 @@ val num: Int? = x as? Int           // null (no crash!)
                 </div>
 
                 <div class="section">
+                    <h2>Smart Casts with <code>when</code></h2>
+                    <p>Kotlin's compiler is smart enough to automatically cast a variable after an <code>is</code> check. This works especially well with <code>when</code> expressions for clean, type-specific handling.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">fun describe(x: Any) = when (x) {
+    is String -> "String of length ${x.length}"  // x smart-cast to String
+    is Int -> "Integer: $x"                       // x smart-cast to Int
+    is Double -> "Double: $x"                     // x smart-cast to Double
+    else -> "Unknown type"
+}
+
+// Smart casts also work with && conditions
+fun isValidString(x: Any): Boolean =
+    x is String && x.length > 0  // x is smart-cast inside the condition
+
+// Compiler tracks null checks across branches
+fun greet(name: String?) {
+    if (name != null) {
+        println(name.uppercase())  // name is String here
+    } else {
+        println("No name")         // name is null here
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Practical use case:</strong> Smart casts are perfect for parsing JSON or API responses where a field might be a string, number, or boolean. Instead of manual casting, let the compiler do the work.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Platform Types</h2>
+                    <p>When calling Java code from Kotlin, types come back as <strong>platform types</strong> — written with a <code>!</code> suffix like <code>String!</code>. Kotlin doesn't know whether a Java method can return null, so it lets you assign the result to either a nullable or non-nullable variable.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Calling a Java method: public String getName()
+val name: String = javaObject.getName()      // Allowed, but risky!
+val safeName: String? = javaObject.getName() // Safer — treat as nullable
+
+// Android example: findViewById returns a platform type
+val button: Button = findViewById(R.id.btn)      // Crashes if view missing
+val safeButton: Button? = findViewById(R.id.btn) // Safe — check before use
+
+// Best practice: treat platform types as nullable
+val text = findViewById&lt;TextView&gt;(R.id.tv)?.text ?: "Default"</code></pre>
+                    </div>
+
+                    <div class="error-box info-box">
+                        <strong>Rule of thumb:</strong> Always treat platform types as nullable unless you are 100% sure the Java method never returns null. In Android, views can be missing, so always use nullable types with <code>findViewById</code> and the safe call operator.
+                    </div>
+                </div>
+
+                <div class="section">
                     <h2><code>let</code> with Nullables</h2>
                     <p>Use <code>let</code> to execute a block of code only if a value is not null.</p>
 
@@ -241,24 +304,96 @@ val result = name?.let { it.uppercase() } ?: "EMPTY"</code></pre>
                     <div class="tip-box">
                         <strong>When to use let:</strong> Perfect for transforming nullable values, doing multiple operations on a nullable, or early-return patterns. Avoid nesting <code>let</code> too deeply — flatten with <code>?: return</code> or early returns.
                     </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> In an Android login flow, <code>email?.let { validateFormat(it) }</code> runs validation only when the user has entered text. Combine with <code>?:</code> to show an error if null: <code>email?.let { submit(it) } ?: showError("Enter email")</code>.
+                    </div>
                 </div>
 
                 <div class="section">
-                    <h2>Nullable Collections</h2>
+                    <h2>Nullable vs Non-Null Collections</h2>
+                    <p>Kotlin lets you express nullability at three levels: the collection itself, its elements, or both. This is crucial when working with APIs that may return missing data.</p>
+
+                    <table>
+                        <tr><th>Type</th><th>Meaning</th><th>Example</th></tr>
+                        <tr><td><code>List&lt;String&gt;</code></td><td>Non-null list of non-null strings</td><td>The list exists, every item exists</td></tr>
+                        <tr><td><code>List&lt;String&gt;?</code></td><td>Nullable list of non-null strings</td><td>The list itself might be null</td></tr>
+                        <tr><td><code>List&lt;String?&gt;</code></td><td>Non-null list of nullable strings</td><td>The list exists, but some items are null</td></tr>
+                        <tr><td><code>List&lt;String?&gt;?</code></td><td>Nullable list of nullable strings</td><td>Everything can be null</td></tr>
+                    </table>
+
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code class="language-kotlin">val list: List<String>? = listOf("a", "b", "c")
+                        <pre><code class="language-kotlin">// API response: list might be null, items might be null
+val apiResponse: List&lt;String?&gt;? = fetchTags()
 
-// Safe access to collection
-val first = list?.firstOrNull() ?: "default"
+// Safe access: only iterate if list is not null, filter out null items
+val validTags = apiResponse?.filterNotNull() ?: emptyList()
 
-// Nullable elements inside a collection
-val nullableList: List<String?> = listOf("a", null, "c")
-val filtered = nullableList.filterNotNull()   // ["a", "c"]
+// Chaining safe calls on nullable elements
+val firstLength = apiResponse?.firstOrNull()?.length  // Int?
+
+// filterNotNull() converts List&lt;String?&gt; to List&lt;String&gt;
+val nullableList: List&lt;String?&gt; = listOf("a", null, "c")
+val nonNullList: List&lt;String&gt; = nullableList.filterNotNull()
 
 // Map with nullable values
-val map: Map<String, String?> = mapOf("key" to null)
+val map: Map&lt;String, String?&gt; = mapOf("key" to null)
 val value = map["key"] ?: "missing"</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> JSON APIs often return arrays where the array itself or individual elements may be missing. Using <code>List&lt;String?&gt;?</code> lets you model this precisely and handle it safely with a single chain of <code>?.filterNotNull()</code>.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Scope Functions: <code>also</code>, <code>apply</code>, <code>run</code>, <code>let</code>, <code>with</code></h2>
+                    <p>Kotlin provides five scope functions to execute blocks of code on an object. They differ in what they return and how they reference the object. All of them work seamlessly with nullables.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// also — side effects, returns the original object
+val person = Person("Alex").also {
+    println("Created: $it")
+}
+
+// apply — object configuration, returns the original object
+val button = Button(context).apply {
+    text = "OK"
+    setOnClickListener { /* ... */ }
+}
+
+// run — transformation + result, needs a receiver
+val greeting = person?.run {
+    "$name is $age years old"
+}
+
+// let — transformation to another type, perfect with nullables
+val result = email?.let { sendEmail(it) }
+
+// with — non-null context block
+with(person) {
+    println(name)
+    println(age)
+}</code></pre>
+                    </div>
+
+                    <table>
+                        <tr><th>Function</th><th>Context object</th><th>Returns</th><th>Use with nulls</th></tr>
+                        <tr><td><code>let</code></td><td><code>it</code></td><td>Lambda result</td><td><code>name?.let { }</code></td></tr>
+                        <tr><td><code>run</code></td><td><code>this</code></td><td>Lambda result</td><td><code>person?.run { }</code></td></tr>
+                        <tr><td><code>with</code></td><td><code>this</code></td><td>Lambda result</td><td><code>with(person) { }</code> (non-null)</td></tr>
+                        <tr><td><code>apply</code></td><td><code>this</code></td><td>Context object</td><td><code>button?.apply { }</code></td></tr>
+                        <tr><td><code>also</code></td><td><code>it</code></td><td>Context object</td><td><code>person?.also { }</code></td></tr>
+                    </table>
+
+                    <div class="tip-box">
+                        <strong>When to use which:</strong> Use <code>let</code> for null-safe transformations and mapping. Use <code>apply</code> for builder-pattern object setup. Use <code>also</code> for logging or side effects without changing the value. Use <code>run</code> when you need to compute a result from a nullable object. Use <code>with</code> when you already know the object is non-null and want to operate on it concisely.
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Practical use case:</strong> In Android, <code>findViewById&lt;TextView&gt;(R.id.title)?.apply { text = "Hello"; textSize = 18f }</code> finds a view, configures it, and returns the view for chaining — all in one null-safe expression.
                     </div>
                 </div>
 

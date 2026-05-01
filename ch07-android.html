@@ -263,6 +263,187 @@ fun AppNavigation() {
                     </div>
                 </div>
 
+                <div class="section">
+                    <h2>Collecting Flows Safely</h2>
+                    <p>When collecting StateFlow in Compose, use <code>collectAsStateWithLifecycle()</code> to automatically stop collecting when the app goes to the background. This prevents unnecessary UI updates and wasted resources.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun CollectAsStateWithLifecycle(flow: Flow&lt;String&gt;) {
+    val state by flow.collectAsStateWithLifecycle()
+}</code></pre>
+                    </div>
+
+                    <p>Add this dependency to your <code>build.gradle.kts</code>:</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Why it matters:</strong> Without lifecycle-aware collection, your Composable continues to receive updates even when the screen is not visible, causing unnecessary recompositions and potential crashes if the UI tries to update while backgrounded.
+                    </div>
+
+                    <p>In a Fragment or Activity, you can also use <code>repeatOnLifecycle</code> to launch a coroutine that only runs when the lifecycle is at least <code>STARTED</code>:</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">lifecycleScope.launch {
+    repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewModel.uiState.collect { state ->
+            updateUi(state)
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Derived State</h2>
+                    <p>Use <code>derivedStateOf</code> when a state value is computed from other states and the computation is expensive. It caches the result and only recalculates when the underlying state actually changes.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">val isFormValid by remember {
+    derivedStateOf { email.isNotBlank() && password.length >= 8 }
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Use case:</strong> Form validation, calculated visibility, filtered lists, or any derived value that would be wasteful to recompute on every recomposition. Without <code>derivedStateOf</code>, the calculation runs every time the Composable recomposes, even if the inputs haven't changed.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>State Hoisting</h2>
+                    <p>State hoisting means moving state up to the lowest common ancestor of all Composables that need to read or write it. The child receives the state and callbacks as parameters, making it stateless and reusable.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        label = { Text("Search") }
+    )
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Use case:</strong> Previews, testing, and reusability. A stateless Composable can be previewed in Android Studio with any input, tested in isolation without a ViewModel, and dropped into any screen because it doesn't depend on external state.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Theming and Material Design</h2>
+                    <p>Material Theme provides a centralized way to define colors, typography, and shapes across your app. Access theme values inside any Composable to keep styling consistent.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">MaterialTheme(
+    colorScheme = darkColorScheme(
+        primary = Purple80,
+        secondary = PurpleGrey80
+    )
+) {
+    Text(
+        text = "Hello",
+        color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.bodyLarge
+    )
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Use case:</strong> Consistent styling. Changing the primary color in the theme updates every Composable that references <code>MaterialTheme.colorScheme.primary</code>. This is especially powerful for supporting dynamic colors and dark mode across your entire app.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Preview Annotations</h2>
+                    <p>Use <code>@Preview</code> to render Composables in Android Studio's design view without running the app on a device. You can create multiple previews for different configurations.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    MyAppTheme { Greeting("Android") }
+}
+
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun GreetingDarkPreview() {
+    MyAppTheme { Greeting("Android") }
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Use case:</strong> Rapid UI iteration. Preview both light and dark themes side by side, test different font scales, or preview the same Composable with multiple data states without touching a physical device.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Common Compose Patterns</h2>
+                    <p>Most screens need to handle loading, success, and error states. Use a sealed class to represent UI state and render the appropriate Composable with a <code>when</code> expression.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">sealed class UiState&lt;out T&gt; {
+    data object Loading : UiState&lt;Nothing&gt;()
+    data class Success&lt;T&gt;(val data: T) : UiState&lt;T&gt;()
+    data class Error(val message: String) : UiState&lt;Nothing&gt;()
+}
+
+@Composable
+fun ContentScreen(uiState: UiState&lt;List&lt;Item&gt;&gt;) {
+    when (uiState) {
+        is UiState.Loading -> CircularProgressIndicator()
+        is UiState.Success -> ContentList(uiState.data)
+        is UiState.Error -> ErrorMessage(uiState.message)
+    }
+}</code></pre>
+                    </div>
+
+                    <h3>Empty State Pattern</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun ItemList(items: List&lt;Item&gt;) {
+    if (items.isEmpty()) {
+        EmptyMessage("No items found")
+    } else {
+        LazyColumn {
+            items(items) { item -> ItemRow(item) }
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <h3>Error State Pattern</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">@Composable
+fun ErrorMessage(message: String, onRetry: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(text = message, color = MaterialTheme.colorScheme.error)
+        Button(onClick = onRetry) { Text("Retry") }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Use case:</strong> These patterns keep your UI predictable. By modeling every possible screen state explicitly, you avoid impossible UI states (like showing an error and loading spinner at the same time) and make your code easier to test.
+                    </div>
+                </div>
+
                 <div class="exercise-box">
                     <h4>Try It Yourself</h4>
                     <p>Create a simple todo item Composable that shows a task text and a checkbox. When clicked, it should toggle a strikethrough on the text.</p>
