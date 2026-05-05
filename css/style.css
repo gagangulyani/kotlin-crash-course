@@ -10,20 +10,20 @@
     --text: #e4e4e8;
     --text-secondary: #8b8b9e;
     --text-muted: #56566a;
-    --accent: #2563eb;
-    --accent-hover: #3b82f6;
-    --accent-subtle: rgba(37, 99, 235, 0.08);
-    --accent-border: rgba(37, 99, 235, 0.2);
+    --accent: #f97316;
+    --accent-hover: #fb923c;
+    --accent-subtle: rgba(249, 115, 22, 0.08);
+    --accent-border: rgba(249, 115, 22, 0.2);
     --green: #22c55e;
     --green-subtle: rgba(34, 197, 94, 0.08);
     --green-border: rgba(34, 197, 94, 0.2);
     --red: #ef4444;
     --red-subtle: rgba(239, 68, 68, 0.08);
-    --yellow: #eab308;
-    --yellow-subtle: rgba(234, 179, 8, 0.08);
-    --yellow-border: rgba(234, 179, 8, 0.25);
+    --yellow: #f59e0b;
+    --yellow-subtle: rgba(245, 158, 11, 0.08);
+    --yellow-border: rgba(245, 158, 11, 0.25);
     --cyan: #22d3ee;
-    --code-accent: #818cf8;
+    --code-accent: #fb923c;
     --radius: 8px;
     --radius-lg: 12px;
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -47,7 +47,7 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-::selection { background: rgba(37, 99, 235, 0.3); color: #fff; }
+::selection { background: rgba(249, 115, 22, 0.3); color: #fff; }
 
 /* ── Layout ── */
 .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
@@ -187,7 +187,7 @@ body {
 .copy-btn.copied { background: var(--green); color: #fff; border-color: var(--green); opacity: 1; }
 
 code {
-    background: var(--accent-subtle); color: #a5b4fc;
+    background: var(--accent-subtle); color: #fdba74;
     padding: 0.12rem 0.4rem; border-radius: 4px;
     font-family: var(--font-mono); font-size: 0.87em;
 }
@@ -205,7 +205,9 @@ pre code { background: none; padding: 0; color: inherit; }
 .comparison-box.open .toggle-icon { transform: rotate(180deg); }
 .comparison-content { display: none; padding: 1rem; background: var(--bg-card); }
 .comparison-box.open .comparison-content { display: block; }
-.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; overflow: hidden; }
+.comparison-col { min-width: 0; }
+.comparison-col .code-block-wrapper { margin-left: 0; margin-right: 0; }
 .comparison-col h5 { font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 0.05em; font-weight: 700; }
 .comparison-col .lang-tag {
     display: inline-block; padding: 0.12rem 0.5rem; border-radius: 4px;
@@ -213,7 +215,7 @@ pre code { background: none; padding: 0; color: inherit; }
 }
 .lang-tag.js { background: rgba(247, 223, 30, 0.1); color: #f7df1e; }
 .lang-tag.py { background: rgba(55, 118, 171, 0.12); color: #60a5fa; }
-.lang-tag.kt { background: rgba(129, 140, 248, 0.12); color: #818cf8; }
+.lang-tag.kt { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
 
 /* ── Exercise Box ── */
 .exercise-box {
@@ -265,7 +267,7 @@ pre code { background: none; padding: 0; color: inherit; }
     position: absolute; left: 0.9rem; top: 0.9rem;
     width: 18px; height: 18px;
 }
-.info-box:not(.warning-box):not(.error-box):not(.success-box) { background: rgba(37, 99, 235, 0.06); border-left: 3px solid var(--accent); }
+.info-box:not(.warning-box):not(.error-box):not(.success-box) { background: rgba(249, 115, 22, 0.06); border-left: 3px solid var(--accent); }
 .info-box:not(.warning-box):not(.error-box):not(.success-box) .info-icon { color: var(--accent); }
 .warning-box { background: var(--yellow-subtle); border-left: 3px solid var(--yellow); }
 .warning-box .info-icon { color: var(--yellow); }
@@ -395,7 +397,8 @@ tr:hover { background: var(--bg-card); }
     .code-block-wrapper pre { font-size: 0.8rem; padding: 0.9rem 1rem; }
     .copy-btn { opacity: 1; }
 
-    .comparison-grid { grid-template-columns: 1fr; }
+    .comparison-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+    .comparison-content { padding: 0.75rem; }
 
     .chapter-nav { gap: 0.75rem; }
     .nav-btn { max-width: 48%; padding: 0.75rem 1rem; }
@@ -464,7 +467,8 @@ tr:hover { background: var(--bg-card); }
     table { font-size: 0.78rem; display: block; overflow-x: auto; }
     th, td { padding: 0.4rem 0.5rem; }
 
-    .comparison-box { margin: 1rem -0.25rem; }
+    .comparison-box { margin: 1rem -0.25rem; border-radius: 6px; }
+    .comparison-content { padding: 0.75rem; }
 
     code { font-size: 0.82em; word-break: break-word; }
 }
