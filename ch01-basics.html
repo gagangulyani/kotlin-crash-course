@@ -56,6 +56,10 @@
                     <h2>Variables: val vs var</h2>
                     <p>In Kotlin, every variable is declared with either <code>val</code> or <code>var</code>. This choice is important because Kotlin strongly encourages immutability.</p>
 
+                    <h3>Theory</h3>
+                    <p>Kotlin's property system is designed around the principle that <strong>read-only data is safer</strong>. A <code>val</code> (value) can only be assigned once and behaves like a <code>final</code> variable in Java. Under the hood, the compiler generates a private field with a getter but no setter. A <code>var</code> (variable) generates both a getter and a setter, making it mutable. This distinction exists at the language level — the compiler enforces it, not just a convention.</p>
+                    <p>Immutability by default eliminates entire categories of bugs: race conditions in multi-threaded code, accidental state mutations, and unintended side effects. When you see <code>val</code> in Kotlin code, you know that reference will never point to a different object.</p>
+
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><code class="language-kotlin">val name = "Alex"      // Immutable — like JS `const` or Python doesn't have this
@@ -69,7 +73,7 @@ age = 26               // ✅ OK</code></pre>
                     </div>
 
                     <h3>Type Inference</h3>
-                    <p>Kotlin figures out the type from the value you assign. But you can be explicit too:</p>
+                    <p>The Kotlin compiler performs <strong>local type inference</strong> by examining the initializer expression. This is not dynamic typing — the type is fixed at compile time. Explicit type declarations are required when there is no initializer (e.g., <code>val name: String</code>) or when you want a wider type than the initializer suggests (e.g., <code>val n: Number = 42</code>).</p>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -114,6 +118,19 @@ name: str = "Alex"</code></pre>
                     </div>
 
                     <h3>Basic Types</h3>
+                    <p>Unlike Java, Kotlin has no primitive types at the language level — <code>Int</code>, <code>Double</code>, <code>Boolean</code>, etc. are all objects. The compiler performs <strong>autoboxing optimizations</strong>: when possible, it compiles these to JVM primitives (<code>int</code>, <code>double</code>, <code>boolean</code>) for performance, but you write them as objects. This means you can call methods on numbers: <code>(-5).absoluteValue</code> or <code>42.toString()</code>.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Everything is an object — methods available on literals
+val abs = (-10).absoluteValue        // 10
+val hex = 255.toString(16)          // "ff"
+val bits = 0b1010.countOneBits()    // 2 (Kotlin 1.4+)
+
+// JVM primitives under the hood, but you never think about it
+val efficient: Int = 1_000_000      // compiled to primitive int</code></pre>
+                    </div>
+
                     <table>
                         <tr><th>Kotlin Type</th><th>Description</th><th>Example</th></tr>
                         <tr><td><code>Int</code></td><td>32-bit integer</td><td><code>42</code></td></tr>
@@ -127,6 +144,8 @@ name: str = "Alex"</code></pre>
 
                     <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Note:</strong> Kotlin has no "primitive" types at the language level. <code>Int</code>, <code>Double</code>, etc. are all objects. The compiler optimizes them to JVM primitives when possible, but you don't need to think about it.
                     </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/basic-types.html" target="_blank" rel="noopener">Official docs: Basic Types (kotlinlang.org)</a></p>
 
                     <h3>Number Literals</h3>
                     <p>Kotlin supports multiple number bases and lets you use underscores for readability. This is especially useful for bitmasks, color values, and large constants.</p>
@@ -152,6 +171,9 @@ val colorChannel = 0xFF           // 255 — a single RGB channel</code></pre>
                 <div class="section">
                     <h2>Strings</h2>
                     <p>Strings in Kotlin are more powerful than in JS or Python, especially with templates and multi-line support.</p>
+
+                    <h3>Theory</h3>
+                    <p>Kotlin strings are immutable sequences of UTF-16 characters (backed by <code>java.lang.String</code> on the JVM). The compiler transforms string templates into <code>StringBuilder</code> operations at compile time — there is no runtime interpolation engine. This means <code>"Hello, $name"</code> is as efficient as manual concatenation. Multi-line strings (triple quotes) are called <strong>raw strings</strong> and do not support <code>\</code> escaping — what you type is what you get, including line breaks and indentation.</p>
 
                     <h3>String Templates</h3>
                     <div class="code-block-wrapper">
@@ -180,6 +202,8 @@ val rawPath = """C:\Users\Alex"""       // raw string — no escaping!</code></p
                     </div>
 
                     <h3>Multi-line Strings</h3>
+                    <p>Raw strings preserve all whitespace exactly as typed. Use <code>trimIndent()</code> to remove common leading whitespace (useful for aligning with code indentation) or <code>trimMargin("|")</code> to strip everything up to a margin prefix character.</p>
+
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><code class="language-kotlin">val json = """
@@ -225,6 +249,9 @@ Line 2"""                             # triple quotes</code></pre>
                     <h2>Type Conversion</h2>
                     <p>Kotlin does not do implicit type conversion. You must be explicit.</p>
 
+                    <h3>Theory</h3>
+                    <p>Java allows implicit widening conversions (<code>int</code> → <code>long</code> → <code>float</code> → <code>double</code>) which can silently lose precision (e.g., <code>long</code> to <code>float</code>). Kotlin rejects this design — every conversion must be explicit via <code>.toXxx()</code> methods. This prevents subtle precision bugs. The <code>toInt()</code>, <code>toDouble()</code>, etc. methods are defined as member functions on number types, not as external utility functions.</p>
+
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><code class="language-kotlin">val i = 10
@@ -238,11 +265,16 @@ val num = s.toInt()      // ✅ 42
 
                     <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Watch out:</strong> Unlike JavaScript, <code>"5" + 3</code> is not <code>"53"</code> in Kotlin — it's a compile error. Kotlin won't silently convert types for you.
                     </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/numbers.html#explicit-number-conversions" target="_blank" rel="noopener">Official docs: Explicit Number Conversions (kotlinlang.org)</a></p>
                 </div>
 
                 <div class="section">
                     <h2>Late Initialization</h2>
                     <p>Sometimes you need a non-nullable variable that can't be initialized immediately — for example, in dependency injection or test setup where the value is assigned after object creation.</p>
+
+                    <h3>Theory</h3>
+                    <p><code>lateinit</code> is a Kotlin compiler feature that delays initialization checking to runtime. The compiler generates a special nullable backing field but exposes it as a non-nullable type. Accessing the property before initialization throws <code>UninitializedPropertyAccessException</code>. You can check initialization status via the property reference syntax <code>::property.isInitialized</code>. This exists primarily for frameworks (Android, Spring, test frameworks) where initialization happens through lifecycle methods or dependency injection containers outside the class constructor.</p>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -282,11 +314,16 @@ class MainActivity {
 
                     <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use:</strong> Use <code>lateinit</code> for dependency injection (Spring, Koin), test setup (JUnit <code>@Before</code>), and Android view binding where initialization happens in a lifecycle method. If you can use a nullable type instead, prefer that for safety.
                     </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/properties.html#late-initialized-properties-and-variables" target="_blank" rel="noopener">Official docs: Late-Initialized Properties (kotlinlang.org)</a></p>
                 </div>
 
                 <div class="section">
                     <h2>Type Aliases</h2>
                     <p>Type aliases give a new name to an existing type. They don't create new types — just more readable names for complex or frequently used type signatures.</p>
+
+                    <h3>Theory</h3>
+                    <p>A <code>typealias</code> is resolved at compile time — it does not create a new type, just an alternative name. This means <code>typealias UserId = String</code> and <code>String</code> are fully interchangeable at runtime. Type aliases are especially useful for function types (<code>(T) -> R</code>), generic instantiations with many type parameters, and documenting intent. They can also have visibility modifiers (<code>internal typealias</code>) and can reference generic types with their own parameters (<code>typealias MyMap&lt;K, V&gt; = Map&lt;K, V&gt;</code>).</p>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -318,6 +355,8 @@ fun fetchData(callback: ApiCallback<String>) { /* ... */ }</code></pre>
 
                     <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why this matters:</strong> Type aliases make your code self-documenting. <code>fun process(users: Users)</code> is clearer than <code>fun process(users: List&lt;User&gt;)</code>. They're especially valuable for nested generics and lambda types in Android callbacks.
                     </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/type-aliases.html" target="_blank" rel="noopener">Official docs: Type Aliases (kotlinlang.org)</a></p>
                 </div>
 
                 <div class="section">

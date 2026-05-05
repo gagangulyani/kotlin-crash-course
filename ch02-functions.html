@@ -84,7 +84,38 @@ println(message)  // Hello, Alex!</code></pre>
 }</code></pre>
                     </div>
 
-                    <div class="comparison-box">
+                    
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Function with receiver type — extends existing classes
+fun String.addExclamation(): String = this + "!"
+val excited = "Hello".addExclamation()  // "Hello!"
+
+// Local function — scoped inside another function
+fun factorial(n: Int): Int {
+    fun helper(x: Int, acc: Int): Int =
+        if (x <= 1) acc else helper(x - 1, acc * x)
+    return helper(n, 1)
+}</code></pre>
+                    </div>
+
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Function returning a function — creates a multiplier
+fun makeMultiplier(factor: Int): (Int) -> Int {
+    return { number -> number * factor }
+}
+val triple = makeMultiplier(3)
+println(triple(4))  // 12
+
+// Closure modifying captured variable
+var sum = 0
+listOf(1, 2, 3).forEach { sum += it }
+println(sum)  // 6</code></pre>
+                    </div>
+
+<div class="comparison-box">
                         <div class="comparison-header">
                             <h4><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="5" width="4" height="16" rx="1"/><rect x="17" y="8" width="4" height="13" rx="1"/><line x1="3" y1="2" x2="21" y2="2"/></svg> Compare with JS / Python</h4>
                             <span class="toggle-icon">▼</span>
@@ -501,7 +532,9 @@ val map = mapOf("a" to 1)   // to is an infix function creating a Pair</code></p
                     </div>
                 </div>
 
-                <div class="exercise-box">
+                                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/functions.html" target="_blank" rel="noopener">Official docs: Functions (kotlinlang.org)</a> · <a href="https://kotlinlang.org/docs/lambdas.html" target="_blank" rel="noopener">Higher-Order Functions and Lambdas (kotlinlang.org)</a></p>
+
+<div class="exercise-box">
                     <h4><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> Try It Yourself</h4>
                     <p>Write a function <code>formatPrice</code> that takes a <code>Double</code> and an optional <code>currency</code> parameter (default <code>"$"</code>), and returns a formatted string like <code>"$19.99"</code> or <code>"€19.99"</code>.</p>
                     <div class="code-block-wrapper">

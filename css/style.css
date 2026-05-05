@@ -249,6 +249,19 @@ body::before {
 .section ul, .section ol { margin-left: 1.5rem; color: var(--text-secondary); margin-bottom: 1rem; }
 .section li { margin-bottom: 0.35rem; }
 
+/* ── Doc Links ── */
+.doc-link {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0.75rem 0 1.25rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 240, 255, 0.03);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+}
+.doc-link a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.doc-link a:hover { text-decoration: underline; }
+
 /* ── Code ── */
 .code-block-wrapper { position: relative; margin: 1.2rem 0; }
 .code-block-wrapper pre {

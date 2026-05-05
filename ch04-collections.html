@@ -462,7 +462,24 @@ val alphabet = 'a'..'z'</code></pre>
                     </table>
                 </div>
 
-                <div class="exercise-box">
+                                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// groupBy — organize items into a Map
+val people = listOf("Alice" to 25, "Bob" to 30, "Carol" to 25)
+val byAge = people.groupBy({ it.second }, { it.first })
+// {25=[Alice, Carol], 30=[Bob]}
+
+// partition — split into two lists by predicate
+val (adults, minors) = people.partition { it.second >= 18 }
+
+// associate — build a map from a list
+val nameToAge = people.associate { it.first to it.second }
+// {Alice=25, Bob=30, Carol=25}</code></pre>
+                    </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/collections-overview.html" target="_blank" rel="noopener">Official docs: Collections Overview (kotlinlang.org)</a> · <a href="https://kotlinlang.org/docs/collection-operations.html" target="_blank" rel="noopener">Collection Operations (kotlinlang.org)</a></p>
+
+<div class="exercise-box">
                     <h4><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> Try It Yourself</h4>
                     <p>Given a list of numbers, write a single chained expression that:</p>
                     <ol>

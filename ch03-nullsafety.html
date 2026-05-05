@@ -388,7 +388,23 @@ with(person) {
                     </div>
                 </div>
 
-                <div class="exercise-box">
+                                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Safe cast with as? — returns null if cast fails
+val maybeString: Any = 42
+val str = maybeString as? String   // null, no crash
+
+// Filter nulls from a list of nullable values
+val names: List&lt;String?&gt; = listOf("A", null, "B", null, "C")
+val nonNullNames = names.filterNotNull()  // ["A", "B", "C"]
+
+// Map with nullable transform — returns List&lt;Int?&gt;
+val lengths = names.map { it?.length }   // [1, null, 1, null, 1]</code></pre>
+                    </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/null-safety.html" target="_blank" rel="noopener">Official docs: Null Safety (kotlinlang.org)</a> · <a href="https://kotlinlang.org/docs/typecasts.html#smart-casts" target="_blank" rel="noopener">Smart Casts (kotlinlang.org)</a></p>
+
+<div class="exercise-box">
                     <h4><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> Try It Yourself</h4>
                     <p>You have a nullable <code>email</code> string. Write a single expression that:</p>
                     <ol>

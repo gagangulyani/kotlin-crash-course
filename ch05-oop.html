@@ -551,7 +551,28 @@ println(User.MAX_NAME_LENGTH)</code></pre>
                     </div>
                 </div>
 
-                <div class="exercise-box">
+                                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// Inline class — zero overhead wrapper (Kotlin 1.5+)
+@JvmInline
+value class Password(val value: String)
+
+// The wrapper exists only at compile time — at runtime it's just String
+fun authenticate(p: Password) { /* ... */ }
+// authenticate("plaintext")  // Type mismatch — compiler catches this!
+
+// Companion object with factory
+class User private constructor(val name: String) {
+    companion object {
+        fun createGuest(): User = User("Guest")
+    }
+}
+val guest = User.createGuest()</code></pre>
+                    </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/classes.html" target="_blank" rel="noopener">Official docs: Classes and Inheritance (kotlinlang.org)</a> · <a href="https://kotlinlang.org/docs/data-classes.html" target="_blank" rel="noopener">Data Classes (kotlinlang.org)</a> · <a href="https://kotlinlang.org/docs/sealed-classes.html" target="_blank" rel="noopener">Sealed Classes (kotlinlang.org)</a></p>
+
+<div class="exercise-box">
                     <h4><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> Try It Yourself</h4>
                     <p>Create a <code>data class</code> called <code>Book</code> with <code>title</code>, <code>author</code>, and <code>year</code>. Then:</p>
                     <ol>

@@ -405,7 +405,28 @@ userUpdates()
                     </div>
                 </div>
 
-                <div class="exercise-box">
+                                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// SupervisorJob — child failures don't cancel siblings
+val supervisor = SupervisorJob()
+val scope = CoroutineScope(supervisor + Dispatchers.Default)
+
+scope.launch {
+    println("Task A running")
+}
+scope.launch {
+    throw RuntimeException("Task B failed")  // Task A keeps running!
+}
+
+// withTimeoutOrNull — return null on timeout
+val result = withTimeoutOrNull(1000L) {
+    fetchSlowNetworkData()  // if this takes > 1s, returns null
+}</code></pre>
+                    </div>
+
+                    <p class="doc-link">📖 <a href="https://kotlinlang.org/docs/coroutines-overview.html" target="_blank" rel="noopener">Official docs: Coroutines Overview (kotlinlang.org)</a> · <a href="https://kotlinlang.org/docs/flow.html" target="_blank" rel="noopener">Flow (kotlinlang.org)</a></p>
+
+<div class="exercise-box">
                     <h4>Try It Yourself</h4>
                     <p>Write a suspend function that fetches two URLs concurrently and returns the combined string length of both responses.</p>
                     <div class="code-block-wrapper">

@@ -434,7 +434,40 @@ fun ErrorMessage(message: String, onRetry: () -> Unit) {
                     </div>
                 </div>
 
-                <div class="exercise-box">
+                                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">// SideEffect — run code only when composition succeeds
+@Composable
+fun AnalyticsScreen(screenName: String) {
+    SideEffect {
+        analytics.logScreenView(screenName)  // not on every recomposition
+    }
+}
+
+// derivedStateOf — cache expensive calculations
+@Composable
+fun FilteredList(items: List&lt;Item&gt;, query: String) {
+    val filtered by remember(query) {
+        derivedStateOf { items.filter { it.name.contains(query) } }
+    }
+    LazyColumn { items(filtered) { ItemRow(it) } }
+}
+
+// DisposableEffect — cleanup when leaving composition
+@Composable
+fun LocationTracker() {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val listener = LocationListener { /* ... */ }
+        locationManager.requestLocationUpdates(provider, 0L, 0f, listener)
+        onDispose { locationManager.removeUpdates(listener) }
+    }
+}</code></pre>
+                    </div>
+
+                    <p class="doc-link">📖 <a href="https://developer.android.com/jetpack/compose/documentation" target="_blank" rel="noopener">Official docs: Jetpack Compose (developer.android.com)</a> · <a href="https://developer.android.com/topic/libraries/architecture/viewmodel" target="_blank" rel="noopener">ViewModel Overview (developer.android.com)</a></p>
+
+<div class="exercise-box">
                     <h4>Try It Yourself</h4>
                     <p>Create a simple todo item Composable that shows a task text and a checkbox. When clicked, it should toggle a strikethrough on the text.</p>
                     <div class="code-block-wrapper">
