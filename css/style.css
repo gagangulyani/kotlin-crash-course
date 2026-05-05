@@ -141,6 +141,13 @@ body::before {
     text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
 }
 .sidebar-nav a.active .nav-icon { opacity: 1; color: var(--accent); filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.6)); }
+.sidebar-nav a.github-link {
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+}
+.sidebar-nav a.github-link:hover { color: #fff; border-color: var(--border); }
 
 /* ── Main ── */
 .main { padding: 0; max-width: 860px; margin: 0 auto; width: 100%; min-width: 0; }
@@ -455,6 +462,27 @@ pre code { background: none; padding: 0; color: inherit; border: none; box-shado
 }
 .hero-stat-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-top: 0.1rem; font-weight: 600; }
 
+.github-banner {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    max-width: 680px; margin: 0 auto 2rem; padding: 0.75rem 1.5rem;
+    background: rgba(0, 240, 255, 0.04);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    color: var(--text-secondary); font-size: 0.9rem;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
+    backdrop-filter: blur(8px);
+}
+.github-banner svg {
+    color: var(--text); flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.3));
+}
+.github-banner a { color: var(--accent); text-decoration: none; font-weight: 600; text-shadow: 0 0 8px rgba(0, 240, 255, 0.2); }
+.github-banner a:hover { text-decoration: underline; text-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+
+@media (max-width: 600px) {
+    .github-banner { margin: 0 1rem 1.5rem; padding: 0.6rem 1rem; font-size: 0.85rem; flex-wrap: wrap; text-align: center; }
+}
+
 .chapters-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 0.75rem; padding: 0 2rem 3rem; max-width: 860px; margin: 0 auto;
@@ -503,6 +531,8 @@ pre code { background: none; padding: 0; color: inherit; border: none; box-shado
     font-size: 0.82rem;
     background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.02));
 }
+.footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.footer a:hover { text-decoration: underline; }
 
 .hljs { background: transparent !important; padding: 0 !important; }
 

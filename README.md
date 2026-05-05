@@ -2,7 +2,7 @@
 
 > A hands-on, chapter-by-chapter guide for JavaScript and Python developers who want to build Android apps with Kotlin.
 
-[**🚀 Start the Course**](https://gagangulyani.github.io/kotlin-crash-course/)
+[**🚀 Start the Course**](https://gagangulyani.github.io/kotlin-crash-course/) &nbsp;·&nbsp; [**⭐ GitHub Repo**](https://github.com/gagangulyani/kotlin-crash-course)
 
 ---
 
