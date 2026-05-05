@@ -38,7 +38,7 @@
         <main class="main">
             <div class="content">
                 <div class="chapter-header">
-                    <div class="chapter-number"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Chapter 4</div>
+                    <div class="chapter-number">Chapter 4</div>
                     <h1 class="chapter-title">Collections</h1>
                     <p class="chapter-description">Lists, sets, maps, and the functional operations that make Kotlin collections a joy to use. Read-only by default, powerful with lambdas.</p>
                 </div>
@@ -76,7 +76,7 @@ val map = mapOf("a" to 1, "b" to 2)         // read-only
 val mutableMap = mutableMapOf("a" to 1)     // mutable</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Read-only ≠ immutable:</strong> <code>listOf()</code> returns a <code>List</code> interface with no mutation methods — but if someone holds a <code>MutableList</code> reference and casts it, the underlying data <em>could</em> change. For true immutability, always expose <code>List</code> (not <code>MutableList</code>) in your public APIs. The "read-only" terminology is more precise than "immutable."
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Read-only ≠ immutable:</strong> <code>listOf()</code> returns a <code>List</code> interface with no mutation methods — but if someone holds a <code>MutableList</code> reference and casts it, the underlying data <em>could</em> change. For true immutability, always expose <code>List</code> (not <code>MutableList</code>) in your public APIs. The "read-only" terminology is more precise than "immutable."
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@ val hasApple = "Apple" in fruits        // true
 val index = fruits.indexOf("Banana")    // 1</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Lists are ideal for ordered data like a playlist, a timeline of messages, or search results from an API where duplicates are allowed and order matters.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Lists are ideal for ordered data like a playlist, a timeline of messages, or search results from an API where duplicates are allowed and order matters.
                     </div>
 
                     <h3>Sets</h3>
@@ -117,7 +117,7 @@ val intersect = a intersect b       // {2, 3}
 val diff = a subtract b             // {1}</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Use sets to track unique tags on a blog post, check for overlapping interests between users, or quickly test membership (e.g., "is this user ID in the banned set?").
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Use sets to track unique tags on a blog post, check for overlapping interests between users, or quickly test membership (e.g., "is this user ID in the banned set?").
                     </div>
 
                     <h3>Maps</h3>
@@ -139,7 +139,7 @@ for ((name, score) in scores) {
 val (key, value) = scores.entries.first()</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Maps power lookup tables such as user settings by key, caching API responses by URL, or converting country codes to display names with O(1) lookup time.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Maps power lookup tables such as user settings by key, caching API responses by URL, or converting country codes to display names with O(1) lookup time.
                     </div>
                 </div>
 
@@ -169,7 +169,7 @@ val result = numbers
 // [50, 40, 30]</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> In an e-commerce app, chain <code>products.filter { it.inStock }.map { it.displayPrice }.sorted()</code> to show available items with formatted prices in ascending order.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> In an e-commerce app, chain <code>products.filter { it.inStock }.map { it.displayPrice }.sorted()</code> to show available items with formatted prices in ascending order.
                     </div>
 
                     <h3>reduce, fold</h3>
@@ -189,7 +189,7 @@ val byFirstLetter = words.groupBy { it.first() }
 // {a=[apple, ant], b=[banana, blue], c=[cherry]}</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Use <code>fold</code> to compute a shopping cart total with an initial discount, or <code>reduce</code> to find the highest-scoring player from a list of game results.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Use <code>fold</code> to compute a shopping cart total with an initial discount, or <code>reduce</code> to find the highest-scoring player from a list of game results.
                     </div>
 
                     <div class="comparison-box">
@@ -249,7 +249,7 @@ val sums = numbers.windowed(3) { it.sum() }
 // [6, 9, 12, 15, 18, 21]</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Use <code>chunked</code> to batch database writes (e.g., 100 rows at a time) or create grid layouts for a photo gallery. Use <code>windowed</code> for rolling averages in analytics, sliding text tokens in NLP, or detecting patterns in sensor data.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Use <code>chunked</code> to batch database writes (e.g., 100 rows at a time) or create grid layouts for a photo gallery. Use <code>windowed</code> for rolling averages in analytics, sliding text tokens in NLP, or detecting patterns in sensor data.
                     </div>
                 </div>
 
@@ -276,7 +276,7 @@ val descriptions = names.zip(ages) { name, age ->
 val (unzippedNames, unzippedAges) = pairs.unzip()</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Reading a CSV file often gives you separate lists for each column. <code>zip</code> lets you combine them into records. Unzip a list of coordinate pairs into separate latitude and longitude lists for charting libraries.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Reading a CSV file often gives you separate lists for each column. <code>zip</code> lets you combine them into records. Unzip a list of coordinate pairs into separate latitude and longitude lists for charting libraries.
                     </div>
                 </div>
 
@@ -316,7 +316,7 @@ val counts = words.groupingBy { it }.eachCount()
 // {apple=3, banana=2, cherry=1}</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Use <code>associateBy</code> to build lookup tables from database rows for O(1) access by ID. Use <code>groupBy</code> to organize messages by sender in a chat app, or to build histograms from log entries.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Use <code>associateBy</code> to build lookup tables from database rows for O(1) access by ID. Use <code>groupBy</code> to organize messages by sender in a chat app, or to build histograms from log entries.
                     </div>
                 </div>
 
@@ -351,7 +351,7 @@ val allEmployees = departments.flatMap { it.employees }
 // departments.map { it.employees }.flatten()</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> A company has departments with employee lists; use <code>flatMap</code> to get a single list of all employees for a company-wide email. In a blog app, <code>flatMap</code> can gather all comments from a list of posts.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> A company has departments with employee lists; use <code>flatMap</code> to get a single list of all employees for a company-wide email. In a blog app, <code>flatMap</code> can gather all comments from a list of posts.
                     </div>
                 </div>
 
@@ -383,7 +383,7 @@ history.addLast("Page 3")
 if (history.size &gt; 10) history.removeFirst()  // keep last 10 pages</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Use <code>ArrayDeque</code> as a navigation history stack in an Android WebView, an undo buffer in a text editor, or a job queue for background workers. Prefer it over <code>LinkedList</code> — it is faster and uses less memory.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Use <code>ArrayDeque</code> as a navigation history stack in an Android WebView, an undo buffer in a text editor, or a job queue for background workers. Prefer it over <code>LinkedList</code> — it is faster and uses less memory.
                     </div>
                 </div>
 
@@ -420,7 +420,7 @@ val uniqueTags = buildSet {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Collection builders shine when the final collection depends on runtime conditions. For example, building an API request body where some fields are optional, or constructing a UI settings map that varies by user permissions.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> Collection builders shine when the final collection depends on runtime conditions. For example, building an API request body where some fields are optional, or constructing a UI settings map that varies by user permissions.
                     </div>
                 </div>
 

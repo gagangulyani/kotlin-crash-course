@@ -38,7 +38,7 @@
         <main class="main">
             <div class="content">
                 <div class="chapter-header">
-                    <div class="chapter-number"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Chapter 3</div>
+                    <div class="chapter-number">Chapter 3</div>
                     <h1 class="chapter-title">Null Safety</h1>
                     <p class="chapter-description">Kotlin's crown jewel. Learn how the type system prevents billion-dollar mistakes by making nullability explicit and safe.</p>
                 </div>
@@ -129,7 +129,7 @@ val city: String? = person?.address?.city
 // val city = if (person != null && person.address != null) person.address.city else null</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Practical use case:</strong> Navigating nested JSON models from an API — <code>user?.profile?.avatarUrl?.let { loadImage(it) }</code> safely handles every missing level in a single chain.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Practical use case:</strong> Navigating nested JSON models from an API — <code>user?.profile?.avatarUrl?.let { loadImage(it) }</code> safely handles every missing level in a single chain.
                     </div>
                 </div>
 
@@ -154,7 +154,7 @@ val critical = name ?: throw IllegalArgumentException("Name required!")
 // val displayName = if (name != null) name else "Unknown"</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Provide default configuration values (<code>timeout ?: 5000</code>), return early error messages (<code>username ?: return "Username required"</code>), or supply fallback images when a URL is missing in a news feed app.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use cases:</strong> Provide default configuration values (<code>timeout ?: 5000</code>), return early error messages (<code>username ?: return "Username required"</code>), or supply fallback images when a URL is missing in a news feed app.
                     </div>
 
                     <div class="comparison-box">
@@ -200,7 +200,7 @@ val length = name!!.length   // 💥 NullPointerException at runtime!
 // Better alternatives exist almost always</code></pre>
                     </div>
 
-                    <div class="error-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><strong>Rule of thumb:</strong> If you're using <code>!!</code>, you're probably doing something wrong. There is almost always a safer alternative: <code>?.</code>, <code>?:</code>, <code>let</code>, or restructuring your code.
+                    <div class="error-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><strong>Rule of thumb:</strong> If you're using <code>!!</code>, you're probably doing something wrong. There is almost always a safer alternative: <code>?.</code>, <code>?:</code>, <code>let</code>, or restructuring your code.
                     </div>
                 </div>
 
@@ -247,10 +247,10 @@ fun greet(name: String?) {
 }</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Practical use case:</strong> Smart casts are perfect for parsing JSON or API responses where a field might be a string, number, or boolean. Instead of manual casting, let the compiler do the work.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Practical use case:</strong> Smart casts are perfect for parsing JSON or API responses where a field might be a string, number, or boolean. Instead of manual casting, let the compiler do the work.
                     </div>
 
-                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Limitation:</strong> Smart casts don't work on <code>var</code> properties that could be changed by another thread. The compiler only smart-casts <code>val</code> local variables and <code>val</code> properties that can't be overridden. For <code>var</code>, use an explicit cast or assign to a local <code>val</code> first.
+                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Limitation:</strong> Smart casts don't work on <code>var</code> properties that could be changed by another thread. The compiler only smart-casts <code>val</code> local variables and <code>val</code> properties that can't be overridden. For <code>var</code>, use an explicit cast or assign to a local <code>val</code> first.
                     </div>
                 </div>
 
@@ -272,7 +272,7 @@ val safeButton: Button? = findViewById(R.id.btn) // Safe — check before use
 val text = findViewById&lt;TextView&gt;(R.id.tv)?.text ?: "Default"</code></pre>
                     </div>
 
-                    <div class="error-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><strong>Rule of thumb:</strong> Always treat platform types as nullable unless you are 100% sure the Java method never returns null. In Android, views can be missing, so always use nullable types with <code>findViewById</code> and the safe call operator.
+                    <div class="error-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><strong>Rule of thumb:</strong> Always treat platform types as nullable unless you are 100% sure the Java method never returns null. In Android, views can be missing, so always use nullable types with <code>findViewById</code> and the safe call operator.
                     </div>
                 </div>
 
@@ -299,10 +299,10 @@ name?.let {
 val result = name?.let { it.uppercase() } ?: "EMPTY"</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use let:</strong> Perfect for transforming nullable values, doing multiple operations on a nullable, or early-return patterns. Avoid nesting <code>let</code> too deeply — flatten with <code>?: return</code> or early returns.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use let:</strong> Perfect for transforming nullable values, doing multiple operations on a nullable, or early-return patterns. Avoid nesting <code>let</code> too deeply — flatten with <code>?: return</code> or early returns.
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> In an Android login flow, <code>email?.let { validateFormat(it) }</code> runs validation only when the user has entered text. Combine with <code>?:</code> to show an error if null: <code>email?.let { submit(it) } ?: showError("Enter email")</code>.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> In an Android login flow, <code>email?.let { validateFormat(it) }</code> runs validation only when the user has entered text. Combine with <code>?:</code> to show an error if null: <code>email?.let { submit(it) } ?: showError("Enter email")</code>.
                     </div>
                 </div>
 
@@ -338,7 +338,7 @@ val map: Map&lt;String, String?&gt; = mapOf("key" to null)
 val value = map["key"] ?: "missing"</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> JSON APIs often return arrays where the array itself or individual elements may be missing. Using <code>List&lt;String?&gt;?</code> lets you model this precisely and handle it safely with a single chain of <code>?.filterNotNull()</code>.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> JSON APIs often return arrays where the array itself or individual elements may be missing. Using <code>List&lt;String?&gt;?</code> lets you model this precisely and handle it safely with a single chain of <code>?.filterNotNull()</code>.
                     </div>
                 </div>
 
@@ -383,10 +383,10 @@ with(person) {
                         <tr><td><code>also</code></td><td><code>it</code></td><td>Context object</td><td><code>person?.also { }</code></td></tr>
                     </table>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use which:</strong> Use <code>let</code> for null-safe transformations and mapping. Use <code>apply</code> for builder-pattern object setup. Use <code>also</code> for logging or side effects without changing the value. Use <code>run</code> when you need to compute a result from a nullable object. Use <code>with</code> when you already know the object is non-null and want to operate on it concisely.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use which:</strong> Use <code>let</code> for null-safe transformations and mapping. Use <code>apply</code> for builder-pattern object setup. Use <code>also</code> for logging or side effects without changing the value. Use <code>run</code> when you need to compute a result from a nullable object. Use <code>with</code> when you already know the object is non-null and want to operate on it concisely.
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> In Android, <code>findViewById&lt;TextView&gt;(R.id.title)?.apply { text = "Hello"; textSize = 18f }</code> finds a view, configures it, and returns the view for chaining — all in one null-safe expression.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Practical use case:</strong> In Android, <code>findViewById&lt;TextView&gt;(R.id.title)?.apply { text = "Hello"; textSize = 18f }</code> finds a view, configures it, and returns the view for chaining — all in one null-safe expression.
                     </div>
                 </div>
 

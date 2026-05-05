@@ -38,7 +38,7 @@
         <main class="main">
             <div class="content">
                 <div class="chapter-header">
-                    <div class="chapter-number"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Chapter 1</div>
+                    <div class="chapter-number">Chapter 1</div>
                     <h1 class="chapter-title">Basics & Types</h1>
                     <p class="chapter-description">Variables, constants, type inference, strings, numbers, and basic operators. Learn how Kotlin's syntax differs from JS and Python.</p>
                 </div>
@@ -67,7 +67,7 @@ name = "Sam"           // ❌ ERROR: Val cannot be reassigned
 age = 26               // ✅ OK</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Best Practice:</strong> Always start with <code>val</code>. Only use <code>var</code> when you absolutely need to change the value. This prevents an entire class of bugs.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Best Practice:</strong> Always start with <code>val</code>. Only use <code>var</code> when you absolutely need to change the value. This prevents an entire class of bugs.
                     </div>
 
                     <h3>Type Inference</h3>
@@ -127,7 +127,7 @@ name: str = "Alex"</code></pre>
                         <tr><td><code>String</code></td><td>Text</td><td><code>"Hello"</code></td></tr>
                     </table>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Note:</strong> Kotlin has no "primitive" types at the language level. <code>Int</code>, <code>Double</code>, etc. are all objects. The compiler optimizes them to JVM primitives when possible, but you don't need to think about it.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Note:</strong> Kotlin has no "primitive" types at the language level. <code>Int</code>, <code>Double</code>, etc. are all objects. The compiler optimizes them to JVM primitives when possible, but you don't need to think about it.
                     </div>
 
                     <h3>Number Literals</h3>
@@ -144,10 +144,10 @@ val permissionFlags = 0b00001101   // bitwise permission flags
 val colorChannel = 0xFF           // 255 — a single RGB channel</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why this matters:</strong> In networking and file systems, binary flags are common. Underscores make large numbers readable without changing the value — <code>1_000_000</code> is the same as <code>1000000</code>.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why this matters:</strong> In networking and file systems, binary flags are common. Underscores make large numbers readable without changing the value — <code>1_000_000</code> is the same as <code>1000000</code>.
                     </div>
 
-                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Android color note:</strong> Android ARGB colors like <code>0xFF121212</code> exceed <code>Int</code>'s max value (2,147,483,647) and become <code>Long</code> in Kotlin. Use <code>Color.parseColor("#FF121212")</code> or the Android <code>Color</code> class for full ARGB values instead of raw hex literals.
+                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Android color note:</strong> Android ARGB colors like <code>0xFF121212</code> exceed <code>Int</code>'s max value (2,147,483,647) and become <code>Long</code> in Kotlin. Use <code>Color.parseColor("#FF121212")</code> or the Android <code>Color</code> class for full ARGB values instead of raw hex literals.
                     </div>
                 </div>
 
@@ -178,7 +178,7 @@ val path = "C:\\Users\\Alex"             // regular string — need escaping
 val rawPath = """C:\Users\Alex"""       // raw string — no escaping!</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Real-world use case:</strong> Building log messages or API URLs: <code>"https://api.example.com/users/${userId.trim()}"</code>. Escaping <code>$</code> is essential when displaying prices or currency: <code>"Total: \$${totalAmount}"</code>.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Real-world use case:</strong> Building log messages or API URLs: <code>"https://api.example.com/users/${userId.trim()}"</code>. Escaping <code>$</code> is essential when displaying prices or currency: <code>"Total: \$${totalAmount}"</code>.
                     </div>
 
                     <h3>Multi-line Strings</h3>
@@ -238,7 +238,7 @@ val num = s.toInt()      // ✅ 42
 // val bad2 = "abc".toInt()  // ❌ Runtime exception!</code></pre>
                     </div>
 
-                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Watch out:</strong> Unlike JavaScript, <code>"5" + 3</code> is not <code>"53"</code> in Kotlin — it's a compile error. Kotlin won't silently convert types for you.
+                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Watch out:</strong> Unlike JavaScript, <code>"5" + 3</code> is not <code>"53"</code> in Kotlin — it's a compile error. Kotlin won't silently convert types for you.
                     </div>
                 </div>
 
@@ -279,10 +279,10 @@ class MainActivity {
 }</code></pre>
                     </div>
 
-                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Important rules:</strong> <code>lateinit</code> only works with <code>var</code> (not <code>val</code>) and only for non-primitive, non-nullable types. If you access it before initialization, you get an <code>UninitializedPropertyAccessException</code>. Always check <code>::name.isInitialized</code> if unsure.
+                    <div class="warning-box info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><strong>Important rules:</strong> <code>lateinit</code> only works with <code>var</code> (not <code>val</code>) and only for non-primitive, non-nullable types. If you access it before initialization, you get an <code>UninitializedPropertyAccessException</code>. Always check <code>::name.isInitialized</code> if unsure.
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use:</strong> Use <code>lateinit</code> for dependency injection (Spring, Koin), test setup (JUnit <code>@Before</code>), and Android view binding where initialization happens in a lifecycle method. If you can use a nullable type instead, prefer that for safety.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use:</strong> Use <code>lateinit</code> for dependency injection (Spring, Koin), test setup (JUnit <code>@Before</code>), and Android view binding where initialization happens in a lifecycle method. If you can use a nullable type instead, prefer that for safety.
                     </div>
                 </div>
 
@@ -318,7 +318,7 @@ class Button {
 fun fetchData(callback: ApiCallback<String>) { /* ... */ }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why this matters:</strong> Type aliases make your code self-documenting. <code>fun process(users: Users)</code> is clearer than <code>fun process(users: List&lt;User&gt;)</code>. They're especially valuable for nested generics and lambda types in Android callbacks.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why this matters:</strong> Type aliases make your code self-documenting. <code>fun process(users: Users)</code> is clearer than <code>fun process(users: List&lt;User&gt;)</code>. They're especially valuable for nested generics and lambda types in Android callbacks.
                     </div>
                 </div>
 

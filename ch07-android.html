@@ -38,7 +38,7 @@
         <main class="main">
             <div class="content">
                 <div class="chapter-header">
-                    <div class="chapter-number"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Chapter 7</div>
+                    <div class="chapter-number">Chapter 7</div>
                     <h1 class="chapter-title">Android & Compose</h1>
                     <p class="chapter-description">Build modern Android UIs with Jetpack Compose, manage state with ViewModel and StateFlow, and understand the Compose lifecycle.</p>
                 </div>
@@ -75,7 +75,7 @@ fun Greeting(name: String) {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Key concept:</strong> In Compose, UI is a function of state. When state changes, Compose automatically recomposes (re-runs) the affected Composables. Think React, but for native Android.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Key concept:</strong> In Compose, UI is a function of state. When state changes, Compose automatically recomposes (re-runs) the affected Composables. Think React, but for native Android.
                     </div>
                 </div>
 
@@ -179,7 +179,7 @@ fun CounterScreen(viewModel: CounterViewModel = viewModel()) {
 }</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use what:</strong> Use <code>remember</code> for UI-only state (text field input, scroll position). Use <code>ViewModel + StateFlow</code> for business logic state that survives configuration changes (screen rotation) and is shared across Composables.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use what:</strong> Use <code>remember</code> for UI-only state (text field input, scroll position). Use <code>ViewModel + StateFlow</code> for business logic state that survives configuration changes (screen rotation) and is shared across Composables.
                     </div>
                 </div>
 
@@ -279,7 +279,7 @@ fun CollectAsStateWithLifecycle(flow: Flow&lt;String&gt;) {
                         <pre><code class="language-kotlin">implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why it matters:</strong> Without lifecycle-aware collection, your Composable continues to receive updates even when the screen is not visible, causing unnecessary recompositions and potential crashes if the UI tries to update while backgrounded.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why it matters:</strong> Without lifecycle-aware collection, your Composable continues to receive updates even when the screen is not visible, causing unnecessary recompositions and potential crashes if the UI tries to update while backgrounded.
                     </div>
 
                     <p>In a Fragment or Activity, you can also use <code>repeatOnLifecycle</code> to launch a coroutine that only runs when the lifecycle is at least <code>STARTED</code>:</p>
@@ -306,7 +306,7 @@ fun CollectAsStateWithLifecycle(flow: Flow&lt;String&gt;) {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Form validation, calculated visibility, filtered lists, or any derived value that would be wasteful to recompute on every recomposition. Without <code>derivedStateOf</code>, the calculation runs every time the Composable recomposes, even if the inputs haven't changed.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Form validation, calculated visibility, filtered lists, or any derived value that would be wasteful to recompute on every recomposition. Without <code>derivedStateOf</code>, the calculation runs every time the Composable recomposes, even if the inputs haven't changed.
                     </div>
                 </div>
 
@@ -326,7 +326,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Previews, testing, and reusability. A stateless Composable can be previewed in Android Studio with any input, tested in isolation without a ViewModel, and dropped into any screen because it doesn't depend on external state.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Previews, testing, and reusability. A stateless Composable can be previewed in Android Studio with any input, tested in isolation without a ViewModel, and dropped into any screen because it doesn't depend on external state.
                     </div>
                 </div>
 
@@ -350,7 +350,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Consistent styling. Changing the primary color in the theme updates every Composable that references <code>MaterialTheme.colorScheme.primary</code>. This is especially powerful for supporting dynamic colors and dark mode across your entire app.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Consistent styling. Changing the primary color in the theme updates every Composable that references <code>MaterialTheme.colorScheme.primary</code>. This is especially powerful for supporting dynamic colors and dark mode across your entire app.
                     </div>
                 </div>
 
@@ -376,7 +376,7 @@ fun GreetingDarkPreview() {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Rapid UI iteration. Preview both light and dark themes side by side, test different font scales, or preview the same Composable with multiple data states without touching a physical device.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> Rapid UI iteration. Preview both light and dark themes side by side, test different font scales, or preview the same Composable with multiple data states without touching a physical device.
                     </div>
                 </div>
 
@@ -432,7 +432,7 @@ fun ErrorMessage(message: String, onRetry: () -> Unit) {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> These patterns keep your UI predictable. By modeling every possible screen state explicitly, you avoid impossible UI states (like showing an error and loading spinner at the same time) and make your code easier to test.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Use case:</strong> These patterns keep your UI predictable. By modeling every possible screen state explicitly, you avoid impossible UI states (like showing an error and loading spinner at the same time) and make your code easier to test.
                     </div>
                 </div>
 

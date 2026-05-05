@@ -392,7 +392,7 @@ body::before {
     transition: all var(--transition);
 }
 .mobile-menu-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
-.mobile-menu-btn svg { width: 15px; height: 15px; }
+
 
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 150; }
 .sidebar-overlay.show { display: block; }
@@ -428,7 +428,7 @@ body::before {
     gap: 0.4rem;
     text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
 }
-.chapter-number svg { width: 14px; height: 14px; }
+
 
 .chapter-title {
     font-size: 2.4rem;
@@ -784,17 +784,8 @@ pre code { background: none; padding: 0; color: inherit; border: none; text-shad
     position: relative;
     overflow: hidden;
 }
-.hero-cta::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-    animation: shimmer 3s ease-in-out infinite;
-}
-@keyframes shimmer { 0%, 100% { left: -100%; } 50% { left: 100%; } }
 .hero-cta:hover { box-shadow: 0 6px 30px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(255,255,255,0.05); transform: translateY(-2px); }
-.hero-cta svg { width: 18px; height: 18px; }
+
 
 .hero-stats { display: flex; justify-content: center; gap: 2.5rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); animation: fadeInUp 0.5s ease-out 0.4s both; }
 .hero-stat { text-align: center; }
@@ -849,13 +840,12 @@ pre code { background: none; padding: 0; color: inherit; border: none; text-shad
 .chapter-card:hover::before { opacity: 1; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
 .chapter-card:hover::after { opacity: 1; }
 
-.chapter-card-icon { width: 28px; height: 28px; color: var(--neon-cyan); opacity: 0.6; margin-bottom: 0.6rem; transition: all var(--transition); filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.2)); }
-.chapter-card:hover .chapter-card-icon { opacity: 1; filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4)); }
-.chapter-card-number { font-size: 0.68rem; color: var(--neon-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; text-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+.chapter-card-icon { display: none; }
+.chapter-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.chapter-card-number { font-size: 0.68rem; color: var(--neon-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; text-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
 .chapter-card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; font-weight: 700; letter-spacing: -0.01em; }
 .chapter-card p { color: var(--text-muted); font-size: 0.84rem; line-height: 1.55; }
-.chapter-card .duration { position: absolute; top: 1.25rem; right: 1.25rem; font-size: 0.7rem; color: var(--text-muted); background: var(--bg-tertiary); padding: 0.2rem 0.6rem; border-radius: 20px; display: flex; align-items: center; gap: 0.25rem; }
-.chapter-card .duration svg { width: 11px; height: 11px; }
+.chapter-card .duration { font-size: 0.7rem; color: var(--text-muted); background: var(--bg-tertiary); padding: 0.2rem 0.55rem; border-radius: 20px; }
 
 .landing-content { max-width: 900px; margin: 0 auto; padding: 0 2rem 2rem; }
 .landing-content .info-box { margin-bottom: 1.5rem; }
@@ -866,7 +856,7 @@ pre code { background: none; padding: 0; color: inherit; border: none; text-shad
 .landing-content a:hover { text-shadow: 0 0 12px rgba(0, 240, 255, 0.4); }
 
 .footer { text-align: center; padding: 2.5rem 2rem; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.82rem; }
-.footer svg { width: 14px; height: 14px; vertical-align: middle; color: var(--accent); filter: drop-shadow(0 0 4px rgba(124, 92, 255, 0.4)); }
+
 
 .hljs { background: transparent !important; padding: 0 !important; }
 

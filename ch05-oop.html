@@ -38,7 +38,7 @@
         <main class="main">
             <div class="content">
                 <div class="chapter-header">
-                    <div class="chapter-number"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Chapter 5</div>
+                    <div class="chapter-number">Chapter 5</div>
                     <h1 class="chapter-title">Classes & OOP</h1>
                     <p class="chapter-description">Data classes, sealed classes, inheritance, interfaces, and extension functions. Object-oriented Kotlin without the boilerplate.</p>
                 </div>
@@ -138,7 +138,7 @@ user = User("Alex", 25)</code></pre>
                         </div>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Practical use:</strong> Use regular classes for services and stateful objects. Use primary constructor properties for configuration objects, DTOs, and anything that carries data without behavior.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Practical use:</strong> Use regular classes for services and stateful objects. Use primary constructor properties for configuration objects, DTOs, and anything that carries data without behavior.
                     </div>
                 </div>
 
@@ -245,10 +245,10 @@ for (priority in Priority.entries) {
 val active = Status.valueOf("ACTIVE")  // Status.ACTIVE</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Note:</strong> Prefer <code>Priority.entries</code> over the older <code>Priority.values()</code> — <code>entries</code> returns an <code>EnumEntries&lt;T&gt;</code> list (more efficient, avoids array copies) and is the modern Kotlin convention since 1.9. Similarly, prefer <code>enumEntries&lt;T&gt;()</code> over the deprecated <code>enumValues&lt;T&gt;()</code>.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Note:</strong> Prefer <code>Priority.entries</code> over the older <code>Priority.values()</code> — <code>entries</code> returns an <code>EnumEntries&lt;T&gt;</code> list (more efficient, avoids array copies) and is the modern Kotlin convention since 1.9. Similarly, prefer <code>enumEntries&lt;T&gt;()</code> over the deprecated <code>enumValues&lt;T&gt;()</code>.
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Use enums for:</strong> API status codes, UI themes, sorting modes, payment states, and anywhere you need a closed set of named constants with compile-time safety.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Use enums for:</strong> API status codes, UI themes, sorting modes, payment states, and anywhere you need a closed set of named constants with compile-time safety.
                     </div>
                 </div>
 
@@ -277,7 +277,7 @@ val outer = Outer()
 val inner = outer.Inner()     // Requires Outer instance</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Common use cases:</strong> Nested classes for self-contained helpers (e.g., <code>ViewHolder</code> in Android adapters). Inner classes for builders that need to access outer properties during construction.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Common use cases:</strong> Nested classes for self-contained helpers (e.g., <code>ViewHolder</code> in Android adapters). Inner classes for builders that need to access outer properties during construction.
                     </div>
                 </div>
 
@@ -328,10 +328,10 @@ class LoggingRepository(
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why this is powerful:</strong> Without <code>by</code>, you'd have to manually implement every method in the interface just to override one. With delegation, the compiler auto-generates those forwarding calls. You only write the methods you want to customize.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why this is powerful:</strong> Without <code>by</code>, you'd have to manually implement every method in the interface just to override one. With delegation, the compiler auto-generates those forwarding calls. You only write the methods you want to customize.
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Use delegation for:</strong> Caching layers, logging wrappers, metrics collection, and transaction management — anywhere you want to add cross-cutting concerns without inheritance.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Use delegation for:</strong> Caching layers, logging wrappers, metrics collection, and transaction management — anywhere you want to add cross-cutting concerns without inheritance.
                     </div>
                 </div>
 
@@ -386,7 +386,7 @@ println(user.name)          // "ALEX"
 println(user.displayName)   // "User: ALEX"</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Use custom accessors for:</strong> Input validation, formatting, lazy computation, derived state, and encapsulating side effects like logging when a property changes.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Use custom accessors for:</strong> Input validation, formatting, lazy computation, derived state, and encapsulating side effects like logging when a property changes.
                     </div>
                 </div>
 
@@ -410,7 +410,7 @@ fun handle(result: Result&lt;String&gt;) = when (result) {
 }</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use sealed classes:</strong> API response states (Success/Error/Loading), UI states, navigation events, permission results — anywhere you have a fixed set of possibilities and want the compiler to ensure you handle every case.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use sealed classes:</strong> API response states (Success/Error/Loading), UI states, navigation events, permission results — anywhere you have a fixed set of possibilities and want the compiler to ensure you handle every case.
                     </div>
                 </div>
 
@@ -456,10 +456,10 @@ class Circle(val radius: Double) : Shape("blue") {
 }</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Design philosophy:</strong> Kotlin defaults to <code>final</code> because inheritance is powerful but dangerous. In the example above, <code>resize()</code> must be explicitly marked <code>open</code> for <code>Square</code> to override it, and <code>Circle</code> can't be subclassed at all. Prefer composition over inheritance.
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Design philosophy:</strong> Kotlin defaults to <code>final</code> because inheritance is powerful but dangerous. In the example above, <code>resize()</code> must be explicitly marked <code>open</code> for <code>Square</code> to override it, and <code>Circle</code> can't be subclassed at all. Prefer composition over inheritance.
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use what:</strong> Use <strong>interfaces</strong> for behavior contracts that cross multiple unrelated types (e.g., <code>Serializable</code>, <code>Comparable</code>). Use <strong>abstract classes</strong> for shared base implementation with common state. Use <strong>open classes</strong> only when you truly intend for others to subclass.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>When to use what:</strong> Use <strong>interfaces</strong> for behavior contracts that cross multiple unrelated types (e.g., <code>Serializable</code>, <code>Comparable</code>). Use <strong>abstract classes</strong> for shared base implementation with common state. Use <strong>open classes</strong> only when you truly intend for others to subclass.
                     </div>
                 </div>
 
@@ -522,7 +522,7 @@ def add_exclamation(s: str) -> str:
                         </div>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Real-world extensions:</strong> <code>String.isEmail()</code> for validation, <code>View.visible()</code> / <code>View.gone()</code> for Android UI, <code>Int.dpToPx()</code> for density conversion, and <code>List&lt;T&gt;.secondOrNull()</code> for missing collection helpers.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Real-world extensions:</strong> <code>String.isEmail()</code> for validation, <code>View.visible()</code> / <code>View.gone()</code> for Android UI, <code>Int.dpToPx()</code> for density conversion, and <code>List&lt;T&gt;.secondOrNull()</code> for missing collection helpers.
                     </div>
                 </div>
 
@@ -549,7 +549,7 @@ val guest = User.createGuest()
 println(User.MAX_NAME_LENGTH)</code></pre>
                     </div>
 
-                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Common patterns:</strong> Use <code>object</code> for event buses, shared preferences helpers, and database instances. Use <code>companion object</code> for factory methods (<code>fromJson</code>, <code>empty</code>), parser functions, and constants that belong to the class namespace.
+                    <div class="tip-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>Common patterns:</strong> Use <code>object</code> for event buses, shared preferences helpers, and database instances. Use <code>companion object</code> for factory methods (<code>fromJson</code>, <code>empty</code>), parser functions, and constants that belong to the class namespace.
                     </div>
                 </div>
 
