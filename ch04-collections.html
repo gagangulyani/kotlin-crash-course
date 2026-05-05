@@ -76,7 +76,7 @@ val map = mapOf("a" to 1, "b" to 2)         // read-only
 val mutableMap = mutableMapOf("a" to 1)     // mutable</code></pre>
                     </div>
 
-                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Read-only ≠ immutable:</strong> <code>listOf()</code> returns a <code>List</code> interface with no mutation methods — but if someone holds a <code>MutableList</code> reference and casts it, the underlying data <em>could</em> change. For true immutability, always expose <code>List</code> (not <code>MutableList</code>) in your public APIs. The "read-only" terminology is more precise than "immutable."
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Read-only ≠ immutable:</strong><br><br><code>listOf()</code> returns a <code>List</code> interface with no mutation methods — but if someone holds a <code>MutableList</code> reference and casts it, the underlying data <em>could</em> change.<br><br>For true immutability, always expose <code>List</code> (not <code>MutableList</code>) in your public APIs. The "read-only" terminology is more precise than "immutable."
                     </div>
                 </div>
 
