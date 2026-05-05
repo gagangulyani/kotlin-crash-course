@@ -253,6 +253,10 @@ fun greet(name: String?) {
                     <div class="tip-box">
                         <strong>Practical use case:</strong> Smart casts are perfect for parsing JSON or API responses where a field might be a string, number, or boolean. Instead of manual casting, let the compiler do the work.
                     </div>
+
+                    <div class="warning-box info-box">
+                        <strong>Limitation:</strong> Smart casts don't work on <code>var</code> properties that could be changed by another thread. The compiler only smart-casts <code>val</code> local variables and <code>val</code> properties that can't be overridden. For <code>var</code>, use an explicit cast or assign to a local <code>val</code> first.
+                    </div>
                 </div>
 
                 <div class="section">

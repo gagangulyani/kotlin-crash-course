@@ -40,13 +40,13 @@
                 <div class="chapter-header">
                     <div class="chapter-number">Chapter 4</div>
                     <h1 class="chapter-title">Collections</h1>
-                    <p class="chapter-description">Lists, sets, maps, and the functional operations that make Kotlin collections a joy to use. Immutable by default, powerful with lambdas.</p>
+                    <p class="chapter-description">Lists, sets, maps, and the functional operations that make Kotlin collections a joy to use. Read-only by default, powerful with lambdas.</p>
                 </div>
 
                 <div class="learning-objectives">
                     <h3>By the end of this chapter, you will:</h3>
                     <ul>
-                        <li>Create and use immutable and mutable collections</li>
+                        <li>Create and use read-only and mutable collections</li>
                         <li>Master functional operations: map, filter, reduce, groupBy</li>
                         <li>Understand when to use List vs Set vs Map</li>
                         <li>Use collection destructuring and ranges</li>
@@ -55,12 +55,12 @@
                 </div>
 
                 <div class="section">
-                    <h2>Immutable vs Mutable Collections</h2>
-                    <p>Kotlin distinguishes between read-only and mutable collections at the type level. By default, use immutable.</p>
+                    <h2>Read-Only vs Mutable Collections</h2>
+                    <p>Kotlin distinguishes between read-only and mutable collections at the type level. By default, use read-only collections.</p>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code class="language-kotlin">// Immutable (read-only) — preferred
+                        <pre><code class="language-kotlin">// Read-only interface — preferred
 val names = listOf("Alice", "Bob", "Charlie")
 // names.add("Dave")  // ❌ Compile error — no add method
 
@@ -69,15 +69,15 @@ val mutableNames = mutableListOf("Alice", "Bob")
 mutableNames.add("Charlie")  // ✅ OK
 
 // Same for sets and maps
-val set = setOf(1, 2, 3)                    // immutable
+val set = setOf(1, 2, 3)                    // read-only
 val mutableSet = mutableSetOf(1, 2, 3)      // mutable
 
-val map = mapOf("a" to 1, "b" to 2)         // immutable
+val map = mapOf("a" to 1, "b" to 2)         // read-only
 val mutableMap = mutableMapOf("a" to 1)     // mutable</code></pre>
                     </div>
 
                     <div class="info-box">
-                        <strong>Why immutable by default?</strong> Immutable collections are thread-safe, predictable, and prevent bugs where something modifies a list you thought was fixed. If you need mutation, you must be explicit about it.
+                        <strong>Read-only ≠ immutable:</strong> <code>listOf()</code> returns a <code>List</code> interface with no mutation methods — but if someone holds a <code>MutableList</code> reference and casts it, the underlying data <em>could</em> change. For true immutability, always expose <code>List</code> (not <code>MutableList</code>) in your public APIs. The "read-only" terminology is more precise than "immutable."
                     </div>
                 </div>
 
@@ -225,7 +225,7 @@ sum_val = reduce(lambda a, b: a + b, nums, 0)</code></pre>
                                     </div>
                                 </div>
                             </div>
-                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Very similar to JS array methods! But Kotlin operations work on immutable collections and are type-safe. No list comprehensions like Python, but chaining is more readable than nested comprehensions.</p>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);"><strong>Kotlin difference:</strong> Very similar to JS array methods! But Kotlin operations work on read-only collections and are type-safe. No list comprehensions like Python, but chaining is more readable than nested comprehensions.</p>
                         </div>
                     </div>
                 </div>
@@ -472,7 +472,7 @@ val alphabet = 'a'..'z'</code></pre>
                         <tr><td>Key-value pairs</td><td><code>Map</code></td><td><code>mapOf()</code></td></tr>
                         <tr><td>Fast lookup by key</td><td><code>Set</code> or <code>Map</code></td><td><code>hashSetOf()</code>, <code>hashMapOf()</code></td></tr>
                         <tr><td>Maintain insertion order</td><td><code>LinkedHashSet</code></td><td><code>linkedSetOf()</code></td></tr>
-                        <tr><td>Sorted order</td><td><code>SortedSet</code></td><td><code>sortedSetOf()</code></td></tr>
+                        <tr><td>Sorted order</td><td><code>TreeSet</code></td><td><code>sortedSetOf()</code></td></tr>
                     </table>
                 </div>
 
@@ -514,7 +514,7 @@ println(list)</code></pre>
                     </div>
                     <div class="check-option" onclick="checkAnswer(this, false, '', 'map returns a NEW list. The original list is never modified.')">[2, 4, 6]</div>
                     <div class="check-option" onclick="checkAnswer(this, true, 'Correct! `map` returns a new list and leaves the original untouched. Since we didn\'t assign the result, `list` stays [1, 2, 3].', '')">[1, 2, 3]</div>
-                    <div class="check-option" onclick="checkAnswer(this, false, '', 'Kotlin collections are immutable by default. `map` never modifies in place.')">Compile error — you can't modify an immutable list</div>
+                    <div class="check-option" onclick="checkAnswer(this, false, '', 'Kotlin read-only collections have no mutation methods. `map` never modifies in place.')">Compile error — you can't modify a read-only list</div>
                     <div class="check-feedback"></div>
                 </div>
 

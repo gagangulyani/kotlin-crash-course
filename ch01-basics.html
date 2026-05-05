@@ -137,17 +137,21 @@ name: str = "Alex"</code></pre>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code class="language-kotlin">val binary = 0b00001011    // 11 in decimal — useful for flags/bitmasks
-val hex = 0x0F             // 15 in decimal — common for colors (0xFF5733)
-val large = 1_000_000      // One million — underscores for readability
+                        <pre><code class="language-kotlin">val binary = 0b00001011       // 11 in decimal — useful for flags/bitmasks
+val hex = 0x0F                // 15 in decimal — common for color channels
+val large = 1_000_000         // One million — underscores for readability
 
-// Real-world: Android colors
-val backgroundColor = 0xFF121212  // dark theme background
-val permissionFlags = 0b00001101    // bitwise permission flags</code></pre>
+// Real-world: bitmask flags and hex values
+val permissionFlags = 0b00001101   // bitwise permission flags
+val colorChannel = 0xFF           // 255 — a single RGB channel</code></pre>
                     </div>
 
                     <div class="info-box">
-                        <strong>Why this matters:</strong> In Android development, colors are hex (<code>0xFF5733</code>). In networking and file systems, binary flags are common. Underscores make large numbers readable without changing the value — <code>1_000_000</code> is the same as <code>1000000</code>.
+                        <strong>Why this matters:</strong> In networking and file systems, binary flags are common. Underscores make large numbers readable without changing the value — <code>1_000_000</code> is the same as <code>1000000</code>.
+                    </div>
+
+                    <div class="warning-box info-box">
+                        <strong>Android color note:</strong> Android ARGB colors like <code>0xFF121212</code> exceed <code>Int</code>'s max value (2,147,483,647) and become <code>Long</code> in Kotlin. Use <code>Color.parseColor("#FF121212")</code> or the Android <code>Color</code> class for full ARGB values instead of raw hex literals.
                     </div>
                 </div>
 

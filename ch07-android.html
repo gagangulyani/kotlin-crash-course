@@ -462,7 +462,7 @@ fun TodoItem(task: String) {
                         <details>
                             <summary>Stuck? Show hint</summary>
                             <div class="exercise-hint-content">
-                                Use <code>var checked by remember { mutableStateOf(false) }</code>, a <code>Row</code> with a <code>Checkbox</code> and a <code>Text</code>, and apply <code>if (checked) TextDecoration.LineThrough else TextDecoration.None</code> to the text style.
+Use <code>var checked by remember { mutableStateOf(false) }</code>, a <code>Row</code> with a <code>Checkbox</code> and a <code>Text</code>. Apply strikethrough with <code>TextDecoration.LineThrough</code> via the <code>textStyle</code> parameter:<br><br><code>Text(task, textDecoration = if (checked) TextDecoration.LineThrough else TextDecoration.None)</code>
                             </div>
                         </details>
                     </div>

@@ -60,7 +60,9 @@
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code class="language-kotlin">// Bad: Creating a thread for every network request
+                        <pre><code class="language-kotlin">import kotlin.concurrent.thread
+
+// Bad: Creating a thread for every network request
 fun fetchUserBad(userId: String) {
     thread {   // Expensive! Each thread = ~1MB memory
         val user = makeNetworkRequest(userId)
@@ -68,15 +70,15 @@ fun fetchUserBad(userId: String) {
     }
 }
 
-// Good: Coroutine — lightweight, managed by Kotlin
+// Good: Coroutine — lightweight, managed by Kotlin's runtime
 suspend fun fetchUserGood(userId: String) {
-    val user = makeNetworkRequest(userId)  // suspend, not block
+    val user = makeNetworkRequest(userId)  // suspends, doesn't block
     println(user)
 }</code></pre>
                     </div>
 
                     <div class="info-box">
-                        <strong>Key insight:</strong> Coroutines are <strong>lightweight threads</strong> managed by Kotlin's runtime, not the operating system. You can launch millions of them on a single thread. They suspend instead of block — freeing the underlying thread to do other work.
+                        <strong>Key insight:</strong> Coroutines are <strong>lightweight threads</strong> managed by Kotlin's runtime, not the operating system. You can launch millions of them on a single thread. They <em>suspend</em> instead of <em>block</em> — freeing the underlying thread to do other work.
                     </div>
 
                     <div class="tip-box">
@@ -276,7 +278,7 @@ scope.launch {
 
                 <div class="section">
                     <h2>Channels</h2>
-                    <p>Channels provide a way for coroutines to communicate with each other — like Go channels or Python queues. They're perfect for producer-consumer patterns.</p>
+                    <p>Channels provide a way for coroutines to communicate with each other — like Go channels or Python queues. They're perfect for producer-consumer patterns where one coroutine produces data and another consumes it.</p>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -341,7 +343,7 @@ suspend fun loadDashboardFast(userId: String) {
                     </div>
 
                     <div class="tip-box">
-                        <strong>Rule:</strong> Suspend functions look synchronous but execute asynchronously. Sequential by default, concurrent when you explicitly use async. This is the opposite of JS where everything concurrent by default.
+                        <strong>Rule:</strong> Suspend functions look synchronous but execute asynchronously. Sequential by default, concurrent when you explicitly use async. This differs from JavaScript where <code>async</code> functions always return Promises and everything runs concurrently unless you explicitly <code>await</code>.
                     </div>
 
                     <div class="tip-box">

@@ -237,15 +237,17 @@ enum class Status(val code: Int) {
 println(Priority.LOW.name)      // "LOW"
 println(Priority.LOW.ordinal)   // 0
 
-// Iterating and finding values
-for (priority in Priority.values()) {
+// Iterating over all values
+for (priority in Priority.entries) {
     println(priority)
 }
 
-val active = Status.valueOf("ACTIVE")  // Status.ACTIVE
+// Finding a value by name
+val active = Status.valueOf("ACTIVE")  // Status.ACTIVE</code></pre>
+                    </div>
 
-// Generic helper for any enum type
-val allStatuses = enumValues&lt;Status&gt;()</code></pre>
+                    <div class="info-box">
+                        <strong>Note:</strong> Prefer <code>Priority.entries</code> over the older <code>Priority.values()</code> — <code>entries</code> returns an <code>EnumEntries&lt;T&gt;</code> list (more efficient, avoids array copies) and is the modern Kotlin convention since 1.9. Similarly, prefer <code>enumEntries&lt;T&gt;()</code> over the deprecated <code>enumValues&lt;T&gt;()</code>.
                     </div>
 
                     <div class="tip-box">
@@ -291,6 +293,7 @@ val inner = outer.Inner()     // Requires Outer instance</code></pre>
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><code class="language-kotlin">interface UserRepository {
     fun findUser(id: String): User
+    fun addUser(user: User)
 }
 
 class RealRepository : UserRepository {
@@ -298,14 +301,26 @@ class RealRepository : UserRepository {
         // query database
         return User(id, "Alex")
     }
+
+    override fun addUser(user: User) {
+        // insert into database
+    }
 }
 
-// Delegates all UserRepository calls to cachedRepository
+// Delegates all UserRepository calls to `delegate`,
+// then overrides only findUser to add caching
 class CachedRepository(
-    private val cachedRepository: UserRepository
-) : UserRepository by cachedRepository
+    private val delegate: UserRepository
+) : UserRepository by delegate {
+    private val cache = mutableMapOf<String, User>()
 
-// You can override specific methods while delegating the rest
+    override fun findUser(id: String): User {
+        return cache.getOrPut(id) { delegate.findUser(id) }
+    }
+    // addUser() is automatically delegated — no boilerplate!
+}
+
+// Delegates to `delegate`, then adds logging to specific methods
 class LoggingRepository(
     private val delegate: UserRepository
 ) : UserRepository by delegate {
@@ -313,7 +328,12 @@ class LoggingRepository(
         println("Finding user $id")
         return delegate.findUser(id)
     }
+    // addUser() is automatically delegated — no boilerplate!
 }</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Why this is powerful:</strong> Without <code>by</code>, you'd have to manually implement every method in the interface just to override one. With delegation, the compiler auto-generates those forwarding calls. You only write the methods you want to customize.
                     </div>
 
                     <div class="tip-box">
@@ -423,17 +443,29 @@ abstract class Shape(val color: String) {
 // Open class (can be inherited)
 open class Rectangle(val width: Double, val height: Double) : Shape("red") {
     override fun area() = width * height
-    open fun resize(factor: Double) = Rectangle(width * factor, height * factor)
+
+    // Must be marked `open` for subclasses to override
+    open fun resize(factor: Double): Rectangle {
+        return Rectangle(width * factor, height * factor)
+    }
 }
 
-// Final class (cannot be inherited further)
 class Square(side: Double) : Rectangle(side, side) {
-    // override fun resize(...) // ❌ Can't override — parent wasn't open
+    // ✅ Can override because resize() is marked open
+    override fun resize(factor: Double): Rectangle {
+        return Square(side * factor)
+    }
+}
+
+// A class without `open` cannot be subclassed at all
+class Circle(val radius: Double) : Shape("blue") {
+    override fun area() = Math.PI * radius * radius
+    fun scale(factor: Double) { }  // NOT open — cannot be overridden
 }</code></pre>
                     </div>
 
                     <div class="info-box">
-                        <strong>Design philosophy:</strong> Kotlin defaults to <code>final</code> because inheritance is powerful but dangerous. Only open classes/methods when you explicitly design for extension. Prefer composition over inheritance.
+                        <strong>Design philosophy:</strong> Kotlin defaults to <code>final</code> because inheritance is powerful but dangerous. In the example above, <code>resize()</code> must be explicitly marked <code>open</code> for <code>Square</code> to override it, and <code>Circle</code> can't be subclassed at all. Prefer composition over inheritance.
                     </div>
 
                     <div class="tip-box">

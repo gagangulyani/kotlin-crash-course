@@ -350,7 +350,7 @@ sumAll(*nums)             // 6</code></pre>
 
                 <div class="section">
                     <h2>Local Functions</h2>
-                    <p>Kotlin lets you declare functions inside other functions. They have access to variables in the outer scope (closure) and are great for encapsulating helper logic.</p>
+                    <p>Kotlin lets you declare functions inside other functions. This keeps helper logic private and organized. Local functions can also <strong>capture</strong> variables from the outer scope — this is called a closure.</p>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -371,43 +371,41 @@ sumAll(*nums)             // 6</code></pre>
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><code class="language-kotlin">// Closure: local function captures outer variable
-fun fibonacci(n: Int): List<Int> {
-    val result = mutableListOf<Int>()
+fun processScores(scores: List<Int>): Map<String, List<Int>> {
+    val passingGrade = 60  // outer variable
 
-    fun compute(current: Int): Int {
-        if (current <= 1) return current
-        // Recursively calls itself — a helper that needs access to `result`
-        return compute(current - 1) + compute(current - 2)
+    // Local function captures `passingGrade` from the enclosing scope
+    fun categorize(score: Int): String {
+        return if (score >= passingGrade) "pass" else "fail"
     }
 
-    for (i in 0 until n) {
-        result.add(compute(i))
-    }
-    return result
-}</code></pre>
+    return scores.groupBy { categorize(it) }
+}
+
+// processScores(listOf(85, 42, 73, 55))
+// → {pass=[85, 73], fail=[42, 55]}</code></pre>
                     </div>
 
                     <div class="info-box">
-                        <strong>Real-world use case:</strong> Local functions keep helper logic private to the function that needs it. In parsing (JSON, XML), you'll often have small recursive helpers that only make sense inside the main parse function. In algorithms, local functions can capture state from the outer scope without polluting the class or file namespace.
+                        <strong>Why use local functions:</strong> They keep helper logic private to the function that needs it — no risk of other code calling your internal helpers. When a local function captures an outer variable, you don't need to pass it as a parameter, keeping the call site clean.
                     </div>
                 </div>
 
                 <div class="section">
                     <h2>Generic Functions</h2>
-                    <p>Generic functions work with any type while maintaining type safety. They're essential for writing reusable utilities.</p>
+                    <p>Generic functions work with any type while maintaining type safety. They're essential for writing reusable utilities — in fact, most of Kotlin's standard library functions like <code>filter</code>, <code>map</code>, and <code>listOf</code> are generic.</p>
 
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                        <pre><code class="language-kotlin">// Generic function with vararg — works with any type T
+                        <pre><code class="language-kotlin">// Generic function — works with any type T
 fun <T> asList(vararg ts: T): List<T> {
     val result = ArrayList<T>()
     for (t in ts) result.add(t)
     return result
 }
 
-val stringList = asList("a", "b", "c")   // List&lt;String&gt;
-val intList = asList(1, 2, 3)            // List&lt;Int&gt;
-val mixed = asList(1, "two", 3.0)        // List&lt;Comparable&lt;*&gt;&gt;</code></pre>
+val stringList = asList("a", "b", "c")   // List<String>
+val intList = asList(1, 2, 3)            // List<Int></code></pre>
                     </div>
 
                     <div class="code-block-wrapper">
@@ -417,16 +415,15 @@ fun <T : Comparable<T>> sort(list: List<T>): List<T> {
     return list.sorted()
 }
 
-// Multiple constraints using where
-fun <T> copyWhenGreater(list: List<T>, threshold: T): List<String>
-    where T : CharSequence,
-          T : Comparable<T> {
-    return list.filter { it > threshold }.map { it.toString() }
+// Multiple constraints using where clause
+fun <T> findMax(list: List<T>): T
+    where T : Comparable<T> {
+    return list.maxOrNull() ?: throw IllegalArgumentException("Empty list")
 }</code></pre>
                     </div>
 
-                    <div class="tip-box">
-                        <strong>Real-world use case:</strong> Generic functions power Kotlin's standard library — <code>listOf()</code>, <code>mapOf()</code>, and <code>filter()</code> are all generic. When building your own utilities (network response wrappers, caching layers, or repository patterns), generics let you write one implementation that works for <code>User</code>, <code>Order</code>, or any other type safely.
+                    <div class="info-box">
+                        <strong>When do you need generics?</strong> When you're writing a function that should work the same way regardless of type — like a sorting function that works for <code>Int</code>, <code>String</code>, or any <code>Comparable</code>. You've already been using generics: <code>List&lt;String&gt;</code>, <code>map { it * 2 }</code>, and <code>filter { it > 0 }</code> are all generic under the hood.
                     </div>
                 </div>
 
