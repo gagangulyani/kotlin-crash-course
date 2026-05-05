@@ -143,40 +143,6 @@ body {
     font-weight: 600;
 }
 .sidebar-nav a.active .nav-icon { opacity: 1; }
-.sidebar-nav a.completed .nav-icon { color: var(--green); opacity: 0.8; }
-.sidebar-nav a .check-mark {
-    margin-left: auto; width: 12px; height: 12px;
-    color: var(--green); opacity: 0; transition: opacity 0.15s;
-}
-.sidebar-nav a.completed .check-mark { opacity: 1; }
-
-/* ── Mark Complete Button ── */
-.mark-complete-btn {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    background: var(--bg-card); border: 1px solid var(--border);
-    color: var(--text-secondary); padding: 0.5rem 1rem;
-    border-radius: 6px; cursor: pointer;
-    font-size: 0.82rem; font-family: var(--font);
-    transition: all 0.15s; margin-top: 0.75rem;
-}
-.mark-complete-btn:hover { border-color: var(--green); color: var(--green); }
-.mark-complete-btn.completed { border-color: var(--green-border); color: var(--green); background: var(--green-subtle); cursor: default; }
-.mark-complete-btn:disabled { opacity: 0.8; cursor: default; }
-
-/* ── Chapter Complete Banner ── */
-.chapter-complete-banner {
-    background: var(--green-subtle);
-    border: 1px solid var(--green-border);
-    border-radius: var(--radius);
-    padding: 0.85rem 1.25rem;
-    margin-bottom: 1.5rem;
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    animation: bannerIn 0.35s ease-out;
-}
-.chapter-complete-banner span { color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
-.banner-next-link { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.85rem; }
-.banner-next-link:hover { text-decoration: underline; }
-@keyframes bannerIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ── Main ── */
 .main { padding: 0; max-width: 860px; margin: 0 auto; }
