@@ -360,6 +360,34 @@ fun fetchData(callback: ApiCallback<String>) { /* ... */ }</code></pre>
                 </div>
 
                 <div class="section">
+                    <h2>Duration (Kotlin 1.6+)</h2>
+                    <p>Kotlin provides a type-safe <code>Duration</code> API for working with time intervals. It prevents mixing seconds and milliseconds by accident.</p>
+
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-kotlin">import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
+
+val timeout = 30.seconds          // Duration
+val half = 500.milliseconds       // Duration
+
+// Arithmetic and comparison
+val total = timeout + half        // 30.5 seconds
+val isLong = timeout > 1.seconds  // true
+
+// Convert
+val millis = timeout.inWholeMilliseconds  // 30000
+
+// Use with APIs
+fun delayFor(duration: Duration) {
+    println("Delaying for $duration")
+}</code></pre>
+                    </div>
+
+                    <div class="info-box"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><strong>Why use Duration:</strong> Passing raw <code>Long</code> values for timeouts leads to bugs — was that 500 seconds or 500 milliseconds? <code>Duration</code> makes the unit explicit at the type level. The compiler won't let you accidentally pass milliseconds where seconds are expected.
+                    </div>
+
                     <h2>Comments</h2>
                     <div class="code-block-wrapper">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
